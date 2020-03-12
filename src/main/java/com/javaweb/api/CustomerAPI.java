@@ -14,7 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.javaweb.converter.DTOConverter;
 import com.javaweb.dto.CustomerDTO;
-import com.javaweb.entity.CustomerEntity;
+import com.javaweb.entity.StaffEntity;
 import com.javaweb.dto.CustomerDTO;
 import com.javaweb.paging.impl.PageRequest;
 import com.javaweb.repository.impl.CustomerRepository;

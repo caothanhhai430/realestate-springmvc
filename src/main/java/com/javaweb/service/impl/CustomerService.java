@@ -8,7 +8,7 @@ import com.javaweb.Helper.ObjectToMap;
 import com.javaweb.builder.CustomerSearchBuilder;
 import com.javaweb.converter.DTOConverter;
 import com.javaweb.dto.CustomerDTO;
-import com.javaweb.entity.CustomerEntity;
+import com.javaweb.entity.StaffEntity;
 import com.javaweb.paging.Pageable;
 import com.javaweb.repository.impl.CustomerRepository;
 import com.javaweb.service.ICustomerService;
@@ -32,20 +32,20 @@ public class CustomerService implements ICustomerService{
 
 	@Override
 	public CustomerDTO findById(long id) {
-		CustomerEntity en = new CustomerRepository().findById(id);
+		StaffEntity en = new CustomerRepository().findById(id);
 		return DTOConverter.toModel(en, CustomerDTO.class);
 		
 	}
 
 	@Override
 	public Long save(CustomerDTO customer) {
-		CustomerEntity entity = DTOConverter.toModel(customer,CustomerEntity.class);
+		StaffEntity entity = DTOConverter.toModel(customer,StaffEntity.class);
 		return new CustomerRepository().save(entity);
 	}
 
 	@Override
 	public Long update(CustomerDTO customer) {
-		CustomerEntity entity = DTOConverter.toModel(customer,CustomerEntity.class);
+		StaffEntity entity = DTOConverter.toModel(customer,StaffEntity.class);
 		return new CustomerRepository().update(entity);
 	}
 

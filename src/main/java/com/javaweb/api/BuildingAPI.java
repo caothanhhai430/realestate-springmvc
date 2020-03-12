@@ -19,6 +19,7 @@ import com.javaweb.service.IBuildingService;
 @RestController
 @RequestMapping("/api-server/building")
 public class BuildingAPI{
+	
 	@Autowired
 	IBuildingService service;
 	

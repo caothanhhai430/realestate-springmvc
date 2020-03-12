@@ -1,14 +1,25 @@
 package com.javaweb.entity;
 
-import com.javaweb.annotation.Column;
-import com.javaweb.annotation.Entity;
-import com.javaweb.annotation.Table;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
 
 @Entity
 @Table(name="building")
-public class BuildingEntity extends AbstractEntity{
+public class BuildingEntity{
 	
 	@Column(name="id")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	public RentArea[] getRentAreaArr() {
@@ -276,9 +287,15 @@ public class BuildingEntity extends AbstractEntity{
 		this.rentAreaArr = rentArea;
 	}
 
-	
-	
-	
-	
-	
+//	@ManyToMany
+//	@JoinTable(
+//			  name = "assignment_staffs", 
+//			  joinColumns = @JoinColumn(name = "buildingids"), 
+//			  inverseJoinColumns = @JoinColumn(name = "staffid"))
+//	Set<StaffEntity> staffList;
+//	
+//	public Set<StaffEntity> getStaffs(){
+//		return staffList;
+//	}
+//	
 }

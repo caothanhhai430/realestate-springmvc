@@ -1,13 +1,15 @@
 package com.javaweb.entity;
 
-import com.javaweb.annotation.Column;
-import com.javaweb.annotation.Entity;
-import com.javaweb.annotation.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="assignmentstaff")
 public class AssignmentStaffEntity {
 	@Column(name="id")
+	@Id
 	private Integer id;
 	
 	@Column(name="buildingid")

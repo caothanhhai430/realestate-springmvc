@@ -14,13 +14,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
+
 import org.apache.commons.lang.ArrayUtils;
 
 import com.javaweb.Helper.MapToSqlInsert;
 import com.javaweb.Helper.MapToSqlSearch;
 import com.javaweb.Helper.PageToSqlSearch;
-import com.javaweb.annotation.Column;
-import com.javaweb.annotation.Table;
 import com.javaweb.builder.SqlBuilder;
 import com.javaweb.entity.BuildingEntity;
 import com.javaweb.mapper.impl.ResultSetMapper;

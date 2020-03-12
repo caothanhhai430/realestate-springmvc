@@ -16,7 +16,7 @@
 				<%@ include file="/common/sidebar.jsp" %>
 
 
-				<dec:body/>
+			<sitemesh:write property='body'/>
 	
 				<!-- footer -->
 				<%@ include file="/common/footer.jsp" %>

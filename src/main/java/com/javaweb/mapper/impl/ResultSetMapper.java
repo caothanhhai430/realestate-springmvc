@@ -8,10 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 import org.apache.commons.beanutils.BeanUtils;
 
-import com.javaweb.annotation.Column;
-import com.javaweb.annotation.Entity;
 import com.javaweb.mapper.RowMapper;
 
 public class ResultSetMapper<T> implements RowMapper<T>{

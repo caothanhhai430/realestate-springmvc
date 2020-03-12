@@ -322,6 +322,7 @@ public class BuildingDTO extends AbstractDTO{
 	public void setDirection(String direction) {
 		this.direction = direction;
 	}
+	
 
 
 }

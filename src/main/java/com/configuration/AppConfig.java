@@ -13,7 +13,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan({"com.javaweb"})
+@ComponentScan({"com"})
 public class AppConfig implements WebMvcConfigurer{
 	 
 	 

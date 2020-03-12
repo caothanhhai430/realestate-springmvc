@@ -7,12 +7,12 @@ import com.javaweb.Helper.MapToSqlSearch;
 import com.javaweb.Helper.PageToSqlSearch;
 import com.javaweb.builder.CustomerSearchBuilder;
 import com.javaweb.builder.SqlBuilder;
-import com.javaweb.entity.CustomerEntity;
+import com.javaweb.entity.StaffEntity;
 import com.javaweb.paging.Pageable;
 
-public class CustomerRepository extends SimpleRepository<CustomerEntity>{
+public class CustomerRepository extends SimpleRepository<StaffEntity>{
 
-	public List<CustomerEntity> findAll(Map<String,Object> properties,
+	public List<StaffEntity> findAll(Map<String,Object> properties,
 			Pageable pageable, CustomerSearchBuilder builder){
 		
 		String where = MapToSqlSearch.toSql(properties);
@@ -27,7 +27,7 @@ public class CustomerRepository extends SimpleRepository<CustomerEntity>{
 		}
 		String SQL = sqlBuilder.addWhere(where).setLimit(limit).build();
 		
-		List<CustomerEntity> resutls =  findAll(SQL);
+		List<StaffEntity> resutls =  findAll(SQL);
 		return resutls;
 	}
 	

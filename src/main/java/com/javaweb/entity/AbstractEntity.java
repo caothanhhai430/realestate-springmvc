@@ -2,7 +2,8 @@ package com.javaweb.entity;
 
 import java.sql.Timestamp;
 
-import com.javaweb.annotation.Column;
+import javax.persistence.Column;
+
 
 public class AbstractEntity {
 	

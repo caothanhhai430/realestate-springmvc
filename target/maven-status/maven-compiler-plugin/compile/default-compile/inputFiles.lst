@@ -1,11 +1,10 @@
-/home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/entity/CustomerEntity.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/service/impl/AssignmentStaffService.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/repository/impl/RentAreaRepository.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/annotation/Column.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/api/UserAPI.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/enums/DistrictEnum.java
+/home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/repository/IBuildingRepository.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/enums/BuildingTypeEnum.java
-/home/thanhhai/Desktop/k/mvc/src/main/java/com/configuration/AppInitializer.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/repository/impl/EntityManagerFactory.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/dto/AssignmentStaffDTO.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/paging/Pageable.java
@@ -15,15 +14,14 @@
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/repository/impl/SimpleRepository.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/service/impl/BuildingService.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/builder/CustomerSearchBuilder.java
+/home/thanhhai/Desktop/k/mvc/src/main/java/com/configuration/PersistenceJPAConfig.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/annotation/Entity.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/entity/RentArea.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/utils/HttpUtil.java
-/home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/entity/UserEntity.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/mapper/RowMapper.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/mapper/impl/ResultSetMapper.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/service/IAssignmentStaffService.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/configuration/AppConfig.java
-/home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/repository/impl/UserRepository.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/paging/impl/PageRequest.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/builder/SqlBuilder.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/api/CustomerAPI.java
@@ -35,6 +33,7 @@
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/configuration/MySitemeshFilter.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/controller/admin/BuildingController.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/dto/CustomerDTO.java
+/home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/entity/StaffEntity.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/service/IUserService.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/repository/JpaRepository.java
 /home/thanhhai/Desktop/k/mvc/src/main/java/com/javaweb/repository/impl/AssignmentStaffRepository.java

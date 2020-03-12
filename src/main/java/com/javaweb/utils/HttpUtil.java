@@ -3,6 +3,8 @@ package com.javaweb.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class HttpUtil {
 	private String value;
 	
@@ -26,13 +28,13 @@ public class HttpUtil {
 	
 	public  <T>T toModel(Class<T> tclass){
 		Object t = null;
-//		try {
-//			 ObjectMapper obj = new ObjectMapper();
-//			 t = (T) obj.readValue(value,tclass);
-//		} catch (IOException e) {
+	try {
+			 ObjectMapper obj = new ObjectMapper();
+			 t = (T) obj.readValue(value,tclass);
+		} catch (IOException e) {
 //			 TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+			e.printStackTrace();
+		}
 		
 		return (T) t;
 	}
