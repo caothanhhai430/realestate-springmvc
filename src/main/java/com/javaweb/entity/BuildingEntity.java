@@ -1,18 +1,16 @@
 package com.javaweb.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-
+@Setter
+@Getter
 @Entity
 @Table(name="building")
 public class BuildingEntity{
@@ -21,20 +19,6 @@ public class BuildingEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	public RentArea[] getRentAreaArr() {
-		return rentAreaArr;
-	}
-
-
-	public void setRentAreaArr(RentArea[] rentAreaArr) {
-		this.rentAreaArr = rentAreaArr;
-	}
-
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	@Column(name="name")
 	private String name;
@@ -58,7 +42,7 @@ public class BuildingEntity{
 	private String structure;
 
 	@Column(name="costrent")
-	private Long costRent;
+	private Long rentCost;
 	
 	@Column(name="costdescription")
 	private String costDescription;
@@ -85,10 +69,10 @@ public class BuildingEntity{
 	private String payment;
 
 	@Column(name="timerent")
-	private String timeRent;
+	private String rentTime;
 
 	@Column(name="timedecorator")
-	private String timeDecorator;
+	private String decoratorTime;
 
 	@Column(name="managername")
 	private String managerName;
@@ -98,204 +82,115 @@ public class BuildingEntity{
 	
 	@Column(name="type")
 	private String type;
-	
-	private RentArea[] rentAreaArr;
+
+	@OneToMany(mappedBy="building",fetch = FetchType.EAGER)
+	private List<RentArea> rentAreaList;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			  name = "assignmentstaff",
+			  joinColumns = @JoinColumn(name = "buildingid"),
+			  inverseJoinColumns = @JoinColumn(name = "staffid"))
+	Set<StaffEntity> staffList;
+
+	public Set<StaffEntity> getStaffs(){
+		return staffList;
+	}
+
 
 	public Long getId() {
 		return id;
 	}
-	
 
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public Long getNumberOfBasement() {
 		return numberOfBasement;
 	}
 
-	public void setNumberOfBasement(Long numberOfBasement) {
-		this.numberOfBasement = numberOfBasement;
-	}
-
 	public Long getBuildingArea() {
 		return buildingArea;
-	}
-
-	public void setBuildingArea(Long buildingArea) {
-		this.buildingArea = buildingArea;
 	}
 
 	public String getDistrict() {
 		return district;
 	}
 
-	public void setDistrict(String district) {
-		this.district = district;
-	}
-
 	public String getWard() {
 		return ward;
 	}
 
-	public void setWard(String ward) {
-		this.ward = ward;
+	public String getStreet() {
+		return street;
 	}
-
-
 
 	public String getStructure() {
 		return structure;
 	}
 
-	public void setStructure(String structure) {
-		this.structure = structure;
-	}
-
-	public Long getCostRent() {
-		return costRent;
-	}
-
-	public void setCostRent(Long costRent) {
-		this.costRent = costRent;
+	public Long getRentCost() {
+		return rentCost;
 	}
 
 	public String getCostDescription() {
 		return costDescription;
 	}
 
-	public void setCostDescription(String costDescription) {
-		this.costDescription = costDescription;
-	}
-
 	public String getServiceCost() {
 		return serviceCost;
-	}
-
-	public void setServiceCost(String serviceCost) {
-		this.serviceCost = serviceCost;
 	}
 
 	public String getCarCost() {
 		return carCost;
 	}
 
-	public void setCarCost(String carCost) {
-		this.carCost = carCost;
-	}
-
-
-	public String getStreet() {
-		return street;
-	}
-
-
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	
 	public String getMotorbikeCost() {
 		return motorbikeCost;
-	}
-
-	public void setMotorbikeCost(String motorbikeCost) {
-		this.motorbikeCost = motorbikeCost;
 	}
 
 	public String getOvertimeCost() {
 		return overtimeCost;
 	}
 
-	public void setOvertimeCost(String overtimeCost) {
-		this.overtimeCost = overtimeCost;
-	}
-
 	public String getElectricityCost() {
 		return electricityCost;
-	}
-
-	public void setElectricityCost(String electricityCost) {
-		this.electricityCost = electricityCost;
 	}
 
 	public String getDeposit() {
 		return deposit;
 	}
 
-	public void setDeposit(String deposit) {
-		this.deposit = deposit;
-	}
-
 	public String getPayment() {
 		return payment;
 	}
 
-	public void setPayment(String payment) {
-		this.payment = payment;
+	public String getRentTime() {
+		return rentTime;
 	}
 
-	public String getTimeRent() {
-		return timeRent;
-	}
-
-	public void setTimeRent(String timeRent) {
-		this.timeRent = timeRent;
-	}
-
-	public String getTimeDecorator() {
-		return timeDecorator;
-	}
-
-	public void setTimeDecorator(String timeDecorator) {
-		this.timeDecorator = timeDecorator;
+	public String getDecoratorTime() {
+		return decoratorTime;
 	}
 
 	public String getManagerName() {
 		return managerName;
 	}
 
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
-	}
-
 	public String getManagerPhone() {
 		return managerPhone;
-	}
-
-	public void setManagerPhone(String managerPhone) {
-		this.managerPhone = managerPhone;
 	}
 
 	public String getType() {
 		return type;
 	}
 
-	public void setType(String buildingType) {
-		this.type = buildingType;
+	public List<RentArea> getRentAreaList() {
+		return rentAreaList;
 	}
 
-	public RentArea[] getRentArea() {
-		return rentAreaArr;
+	public Set<StaffEntity> getStaffList() {
+		return staffList;
 	}
-
-	public void setRentArea(RentArea[] rentArea) {
-		this.rentAreaArr = rentArea;
-	}
-
-//	@ManyToMany
-//	@JoinTable(
-//			  name = "assignment_staffs", 
-//			  joinColumns = @JoinColumn(name = "buildingids"), 
-//			  inverseJoinColumns = @JoinColumn(name = "staffid"))
-//	Set<StaffEntity> staffList;
-//	
-//	public Set<StaffEntity> getStaffs(){
-//		return staffList;
-//	}
-//	
 }

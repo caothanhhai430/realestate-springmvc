@@ -1,5 +1,8 @@
 package com.javaweb.builder;
 
+import lombok.Getter;
+
+@Getter
 public class BuildingSearchBuilder {
 	private String name;
 	private Long numberOfBasement;
@@ -7,13 +10,17 @@ public class BuildingSearchBuilder {
 	private String district;
 	private String ward;
 	private String street;
-	private Long costRentFrom;
-	private Long costRentTo;
-	private Long areaRentFrom;
-	private Long areaRentTo;
+	private Long rentCostFrom;
+	private Long rentCostTo;
+	private Long rentAreaFrom;
+	private Long rentAreaTo;
 	private String[] buildingType;
 	private Long staffId;
 	
+	private BuildingSearchBuilder() {
+		
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -38,16 +45,30 @@ public class BuildingSearchBuilder {
 		return street;
 	}
 
+	public Long getRentCostFrom() {
+		return rentCostFrom;
+	}
+
+	public Long getRentCostTo() {
+		return rentCostTo;
+	}
+
+	public Long getRentAreaFrom() {
+		return rentAreaFrom;
+	}
+
+	public Long getRentAreaTo() {
+		return rentAreaTo;
+	}
+
 	public String[] getBuildingType() {
 		return buildingType;
 	}
 
-	
-	
-	private BuildingSearchBuilder() {
-		
+	public Long getStaffId() {
+		return staffId;
 	}
-		
+
 	private BuildingSearchBuilder(Builder builder) {
 		
 		this.name = builder.name;
@@ -57,39 +78,14 @@ public class BuildingSearchBuilder {
 		this.ward = builder.ward;
 		this.street = builder.street;
 		this.buildingType = builder.buildingType;
-		this.areaRentFrom = builder.areaRentFrom;
-		this.areaRentTo = builder.areaRentTo;
-		this.costRentFrom = builder.costRentFrom;
-		this.costRentTo = builder.costRentTo;
-		this.staffId = builder.getStaffId();
+		this.rentAreaFrom = builder.rentAreaFrom;
+		this.rentAreaTo = builder.rentAreaTo;
+		this.rentCostFrom = builder.rentCostFrom;
+		this.rentCostTo = builder.rentCostTo;
+		this.staffId = builder.staffId;
 	}
 
-
-	public Long getCostRentFrom() {
-		return costRentFrom;
-	}
-
-
-	public Long getCostRentTo() {
-		return costRentTo;
-	}
-
-
-	public Long getAreaRentFrom() {
-		return areaRentFrom;
-	}
-
-
-	public Long getAreaRentTo() {
-		return areaRentTo;
-	}
-
-
-	public Long getStaffId() {
-		return staffId;
-	}
-
-
+	@Getter
 	public static class Builder{
 		private String name;
 		private Long numberOfBasement;
@@ -97,10 +93,10 @@ public class BuildingSearchBuilder {
 		private String district;
 		private String ward;
 		private String street;
-		private Long costRentFrom;
-		private Long costRentTo;
-		private Long areaRentFrom;
-		private Long areaRentTo;
+		private Long rentCostFrom;
+		private Long rentCostTo;
+		private Long rentAreaFrom;
+		private Long rentAreaTo;
 		private String[] buildingType;
 		private Long staffId;
 		
@@ -143,77 +139,30 @@ public class BuildingSearchBuilder {
 			return this;
 		}
 		
-		
-		public String getName() {
-			return name;
-		}
-
-		public Long getNumberOfBasement() {
-			return numberOfBasement;
-		}
-
-		public Long getBuildingArea() {
-			return buildingArea;
-		}
-
-		public String getDistrict() {
-			return district;
-		}
-
-		public String getWard() {
-			return ward;
-		}
-
-		public String getStreet() {
-			return street;
-		}
-
-		public String[] getBuildingType() {
-			return buildingType;
-		}
 
 		public BuildingSearchBuilder build() {
 			return new BuildingSearchBuilder(this);
 		}
 
-		public Long getCostRentFrom() {
-			return costRentFrom;
-		}
 
-		public Builder setCostRentFrom(Long costRentFrom) {
-			this.costRentFrom = costRentFrom;
+		public Builder setRentCostFrom(Long rentCostFrom) {
+			this.rentCostFrom = rentCostFrom;
 			return this;
 		}
 
-		public Long getCostRentTo() {
-			return costRentTo;
-		}
-
-		public Builder setCostRentTo(Long costRentTo) {
-			this.costRentTo = costRentTo;
+		public Builder setRentCostTo(Long rentCostTo) {
+			this.rentCostTo = rentCostTo;
 			return this;
 		}
 
-		public Long getAreaRentFrom() {
-			return areaRentFrom;
-		}
-
-		public Builder setAreaRentFrom(Long areaRentFrom) {
-			this.areaRentFrom = areaRentFrom;
+		public Builder setRentAreaFrom(Long rentAreaFrom) {
+			this.rentAreaFrom = rentAreaFrom;
 			return this;
 		}
 
-		public Long getAreaRentTo() {
-			return areaRentTo;
-		}
-
-		public Builder setAreaRentTo(Long areaRentTo) {
-			this.areaRentTo = areaRentTo;
+		public Builder setRentAreaTo(Long rentAreaTo) {
+			this.rentAreaTo = rentAreaTo;
 			return this;
-		}
-
-		public Long getStaffId() {
-			return staffId;
 		}
 
 		public Builder setStaffId(Long staffId) {

@@ -16,53 +16,47 @@ import com.javaweb.entity.RentArea;
 import com.javaweb.paging.Pageable;
 import com.javaweb.repository.BuildingRepositoryCustom;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @Repository
 public class BuildingRepositoryCustomImpl extends SimpleRepository<BuildingEntity> implements BuildingRepositoryCustom{
 
+	@PersistenceContext
+	private EntityManager em;
 	
 
 	public List<BuildingEntity> findAll(Map<String,Object> properties,
 			Pageable pageable,BuildingSearchBuilder builder){
-		
-		SqlBuilder sqlBuilder = new SqlBuilder()
-				.setTableName(getTableName());
-		if(builder.getStaffId()!=null) {
-			sqlBuilder.setJoin("INNER").setTableName2("assignmentstaff")
-			.setOn("A.id=B.buildingid")
-			.addWhere("AND staffid="+builder.getStaffId());
-		}
-		String SQL = sqlBuilder
-				.addWhere(MapToSqlSearch.toSql(properties).trim())
-				.addWhere(getSpecialSQL(builder).trim())
-				.setLimit(PageToSqlSearch.toSql(pageable)).build();
-		List<BuildingEntity> results= findAll(SQL);
-		
-		RentAreaRepository rentAreaRepository = new RentAreaRepository();
-		results.forEach(e->{
-			
-			List<RentArea> rentArea = rentAreaRepository.findByBuildingId(e.getId().intValue());
-//			e.setRentAreaArr(rentArea.toArray(new RentArea[rentArea.size()]));
-		});
+
+		String s = getSpecialSQL(builder);
+		List<BuildingEntity> results = (List<BuildingEntity>) em.createQuery(
+				"select building from BuildingEntity building inner join building.staffList staff where " +
+						"1=1 AND staff.id=8 "  + getSpecialSQL(builder))
+				.getResultList();
+
 		return results;
 		
 	}
 	
 	private String getSpecialSQL(BuildingSearchBuilder builder) {
 		StringBuilder sql = new StringBuilder();
-		if(builder.getCostRentFrom()!=null) {
-			sql.append(" AND costrent >="+builder.getCostRentFrom());
+		String prefix = "building.";
+		if(builder.getRentCostFrom()!=null) {
+			sql.append(" AND " + prefix + "rentCost >="+builder.getRentCostFrom());
 		}
-		if(builder.getCostRentTo()!=null) {
-			sql.append(" AND costrent <="+builder.getCostRentTo());
+		if(builder.getRentCostTo()!=null) {
+			sql.append(" AND " + prefix + "rentCost <="+builder.getRentCostTo());
 		}
 		
-		if(builder.getAreaRentFrom()!=null || builder.getAreaRentTo()!=null) {
-			sql.append(" AND EXISTS (SELECT * FROM rentarea ra WHERE ra.buildingid=A.id");
-			if(builder.getAreaRentFrom()!=null){
-				sql.append(" AND ra.value >="+builder.getAreaRentFrom());
+		if(builder.getRentAreaFrom()!=null || builder.getRentAreaTo()!=null) {
+			sql.append(" AND EXISTS (SELECT ra FROM RentArea ra WHERE ra.building=" + prefix + "id");
+
+			if(builder.getRentAreaFrom()!=null){
+				sql.append(" AND ra.value >="+builder.getRentAreaFrom());
 			}
-			if(builder.getAreaRentTo()!=null){
-				sql.append(" AND ra.value <="+builder.getAreaRentTo());
+			if(builder.getRentAreaTo()!=null){
+				sql.append(" AND ra.value <="+builder.getRentAreaTo());
 			}
 			sql.append(")");
 		}

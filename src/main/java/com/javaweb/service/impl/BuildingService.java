@@ -1,5 +1,6 @@
 package com.javaweb.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,13 +25,13 @@ public class BuildingService implements IBuildingService{
 
 	@Autowired
 	BuildingRepository repository;
-	
+
 	@Override
 	public List<BuildingDTO> findAll(BuildingDTO dto, Pageable pageable) {
 		BuildingSearchBuilder specialFieldBuilder = new BuildingSearchBuilder.Builder()
-				.setBuildingType(dto.getBuildingType()).setAreaRentFrom(dto.getAreaRentFrom())
-				.setAreaRentTo(dto.getAreaRentTo()).setCostRentFrom(dto.getCostRentFrom())
-				.setCostRentTo(dto.getCostRentTo()).setStaffId(dto.getStaffId()).build();
+				.setBuildingType(dto.getBuildingType()).setRentAreaFrom(dto.getRentAreaFrom())
+				.setRentAreaTo(dto.getRentAreaTo()).setRentCostFrom(dto.getRentCostFrom())
+				.setRentCostTo(dto.getRentCostTo()).setStaffId(dto.getStaffId()).build();
 		
 		BuildingSearchBuilder singleFieldBuilder = new BuildingSearchBuilder.Builder()
 				.setName(dto.getName()).setNumberOfBasement(dto.getNumberOfBasement())
@@ -41,14 +42,10 @@ public class BuildingService implements IBuildingService{
 		Iterable<BuildingEntity> data =   repository
 				.findAll(properties,pageable,specialFieldBuilder);
 		List<BuildingEntity> results = StreamSupport.stream(data.spliterator(),false).collect(Collectors.toList());
-//		List<BuildingEntity> results= new BuildingRepository()
-//				.findAll(properties,pageable,specialFieldBuilder);
 		return results.stream()
 				.map(item-> {
 					BuildingDTO temp = (BuildingDTO)DTOConverter.toModel(item,BuildingDTO.class);
-//					String tempRentArea = Arrays.stream(item.getRentAreaArr())
-//								.map(e-> e.getValue().toString()).collect(Collectors.joining(","));
-//					temp.setRentArea(tempRentArea);
+
 					return temp;
 				}).collect(Collectors.toList());
 	}
@@ -59,9 +56,7 @@ public class BuildingService implements IBuildingService{
 		return results.stream()
 				.map(item-> {
 					BuildingDTO temp = (BuildingDTO)DTOConverter.toModel(item,BuildingDTO.class);
-//					String tempRentArea = Arrays.stream(item.getRentAreaArr())
-//								.map(e-> e.getValue().toString()).collect(Collectors.joining(","));
-//					temp.setRentArea(tempRentArea);
+
 					return temp;
 				}).collect(Collectors.toList());
 	}

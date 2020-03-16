@@ -57,7 +57,7 @@
                     <td>${building.managerPhone}</td>
 
                     <td>${building.buildingArea}</td>
-                    <td >${building.costRent}</td>
+                    <td >${building.rentCost}</td>
 
                     <td >${building.serviceCost}</td>
                     <td >${building.getBuildingTypeArray()}</td>

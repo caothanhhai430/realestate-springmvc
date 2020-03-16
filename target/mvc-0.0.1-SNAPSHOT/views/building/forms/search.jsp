@@ -18,25 +18,27 @@
         </div>
 
         <div class="widget-body" style="display: block;">
-                
-            <div class="widget-main">
-                    <form id="building_form">
+            
+       
+                <div class="widget-main">
+                    <form:form  id="building_form" modelAttribute="buildingRequest" method="GET">
+             
                 
                 <div class="form-group">
                         <div class="col-sm-4">
                                 <label for="form-field-8">Tên tòa nhà</label>
 
-                                <input class="form-control" name="name" id="form-field-8" placeholder=""></input>
+                                <form:input class="form-control" path="name" />
                             </div>
                         <div class="col-sm-4">
                                 <label for="form-field-8">Diện tích sàn</label>
 
-                                <input class="form-control" name="rentArea" id="form-field-8" placeholder=""></input>
+                                <form:input class="form-control" path="rentArea" />
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">Số tầng hầm</label>
 
-                            <input class="form-control" name="numberOfBasement" id="form-field-8" placeholder=""></input>
+                            <form:input class="form-control" path="numberOfBasement" />
                     </div>
 
                 </div>
@@ -44,43 +46,23 @@
                     <div class="col-sm-4">
                             <label for="form-field-8">Quận,Huyện</label>
 
-                            <select class="form-control" name="district" id="form-field-8">
+                            <select class="form-control" path="district" id="form-field-8">
                                 <option value=""></option>
-                                <option value="QUAN_1">Quận 1</option>
-                                <option value="QUAN_2">Quận 2</option>
-                                <option value="QUAN_3">Quận 3</option>
-                                <option value="QUAN_4">Quận 4</option>
-                                <option value="QUAN_5">Quận 5</option>
-                                <option value="QUAN_6">Quận 6</option>
-                                <option value="QUAN_7">Quận 7</option>
-                                <option value="QUAN_8">Quận 8</option>
-                                <option value="QUAN_9">Quận 9</option>
-                                <option value="QUAN_10">Quận 10</option>
-                                <option value="QUAN_11">Quận 11</option>
-                                <option value="QUAN_12">Quận 12</option>
-                                <option value="QUAN_THU_DUC">Quận Thủ Đức</option>
-                                <option value="QUAN_GO_VAP">Quận Gò Vấp</option>
-                                <option value="QUAN_BINH_THANH">Quận Bình Thạnh</option>
-                                <option value="QUAN_TAN_BINH">Quận Tân Bình</option>
-                                <option value="QUAN_TAN_PHU">Quận Tân Phú</option>
-                                <option value="QUAN_PHU_NHUAN">Quận Phú Nhuận</option>
-                                <option value="QUAN_BINH_TAN">Quận Bình Tân</option>
-                                <option value="QUAN_CU_CHI">Quận Củ Chi</option>
-                                <option value="QUAN_HOC_MON">Quận Hóc Môn</option>
-                                <option value="QUAN_BINH_CHANH">Quận Bình Chánh</option>
-                                <option value="QUAN_NHA_BE">Quận Nhà Bè</option>
-                                <option value="QUAN_CAN_GIO">Quận Cần Giờ</option>
+                                <c:forEach items="${districtsMap}" var="district">
+                                    <option value="${district.key}">${district.value}</option>
+                                </c:forEach>
+                                
                               </select>
                             </div>
                     <div class="col-sm-4">
                             <label for="form-field-8">Phường</label>
 
-                            <input class="form-control" name="ward" id="form-field-8" placeholder=""></input>
+                            <form:input class="form-control" path="ward" />
                     </div>
                     <div class="col-sm-4">
                         <label for="form-field-8">Đường</label>
 
-                        <input class="form-control" name="street" id="form-field-8" placeholder=""></input>
+                        <form:input class="form-control" path="street" />
                 </div>
 
             </div>
@@ -89,30 +71,30 @@
                         <div class="col-sm-3">
                                 <label for="form-field-8">Diện tích từ</label>
 
-                                <input class="form-control" name="rentAreaFrom" id="form-field-8" placeholder=""></input>
+                                <form:input class="form-control" path="rentAreaFrom" />
                             </div>
                         <div class="col-sm-3">
                                 <label for="form-field-8">Diện tích đến</label>
 
-                                <input class="form-control" name="rentAreaTo" id="form-field-8" placeholder=""></input>
+                                <form:input class="form-control" path="rentAreaTo" />
                             </div>
                             <div class="col-sm-3">
                                     <label for="form-field-8">Giá thuê từ</label>
 
-                                    <input class="form-control" name="costRentFrom" id="form-field-8" placeholder=""></input>
+                                    <form:input class="form-control" path="rentCostFrom" />
                                 </div>
                             <div class="col-sm-3">
                                     <label for="form-field-8">Giá thuê đến</label>
 
-                                    <input class="form-control" name="costRentTo" id="form-field-8" placeholder=""></input>
+                                    <form:input class="form-control" path="rentCostTo" />
                                 </div>
 
                 </div>
 
                 <div>
-                    <input type="checkbox" name="buildingType" value="NOI_THAT"> Nội thất
-                    <input type="checkbox" name="buildingType" value="TANG_TRET"> Tầng trệt
-                    <input type="checkbox" name="buildingType" value="NGUYEN_CAN"> Nguyên căn
+                    <input type="checkbox" path="buildingType" value="NOI_THAT"/> Nội thất
+                    <input type="checkbox" path="buildingType" value="TANG_TRET"/> Tầng trệt
+                    <input type="checkbox" path="buildingType" value="NGUYEN_CAN"/> Nguyên căn
                 </div>
 
 
@@ -122,8 +104,10 @@
                         Search
                     </button>
                 
-            </form>
+                    
+            </form:form>
             </div>
+
         </div>
     </div>
 </div>

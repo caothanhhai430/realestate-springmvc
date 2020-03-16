@@ -61,8 +61,10 @@ public class PersistenceJPAConfig {
 	     Properties properties = new Properties();
 	     properties.setProperty("hibernate.hbm2ddl.auto", "update");
 	     properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-	         
-	     return properties;
+		 properties.setProperty("show_sql", "true");
+		 properties.setProperty("format_sql", "true");
+
+		 return properties;
 	 }
 	 @Bean
 		JpaTransactionManager transactionManager() {

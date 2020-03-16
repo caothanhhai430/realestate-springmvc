@@ -1,8 +1,12 @@
 package com.javaweb.dto;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import com.javaweb.entity.RentArea;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
 
 import com.javaweb.enums.BuildingTypeEnum;
@@ -21,9 +25,9 @@ public class BuildingDTO extends AbstractDTO{
 	private String structure;
 	private String rank;
 	private String direction;
+	private List<RentArea> rentAreaList;
 	
-	
-	private Long costRent;
+	private Long rentCost;
 	private String serviceCost;
 	private String carCost;
 	private String motorbikeCost;
@@ -31,14 +35,14 @@ public class BuildingDTO extends AbstractDTO{
 	private String electricityCost;
 	private String deposit;
 	private String payment;
-	private String timeRent;
-	private String timeDecorator;
+	private String rentTime;
+	private String decoratorTime;
 	private String managerName;
 	private String managerPhone;
-	private Long costRentFrom;
-	private Long costRentTo;
-	private Long areaRentFrom;
-	private Long areaRentTo;
+	private Long rentCostFrom;
+	private Long rentCostTo;
+	private Long rentAreaFrom;
+	private Long rentAreaTo;
 	private String costDescription;
 	private String[] buildingType;
 	private String type;
@@ -70,259 +74,268 @@ public class BuildingDTO extends AbstractDTO{
 		}
 		return address;
 	}
-	
-	public Long getId() {
-		return id;
+
+	public String getRentArea() {
+		if(rentAreaList==null) return  "";
+
+		String tempRentArea = rentAreaList.stream()
+				.map(e-> e.getValue().toString()).collect(Collectors.joining(","));
+		return tempRentArea;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setRentAreaList(List<RentArea> rentAreaList) {
+		this.rentAreaList = rentAreaList;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public Long getNumberOfBasement() {
 		return numberOfBasement;
-	}
-
-	public void setNumberOfBasement(Long numberOfBasement) {
-		this.numberOfBasement = numberOfBasement;
 	}
 
 	public Long getBuildingArea() {
 		return buildingArea;
 	}
 
-	public void setBuildingArea(Long buildingArea) {
-		this.buildingArea = buildingArea;
-	}
-
 	public String getDistrict() {
 		return district;
-	}
-
-	public void setDistrict(String district) {
-		this.district = district;
 	}
 
 	public String getWard() {
 		return ward;
 	}
 
-	public void setWard(String ward) {
-		this.ward = ward;
-	}
-
 	public String getStreet() {
 		return street;
-	}
-
-	public void setStreet(String street) {
-		this.street = street;
 	}
 
 	public String getStructure() {
 		return structure;
 	}
 
-	public void setStructure(String structure) {
-		this.structure = structure;
-	}
-
-	public Long getCostRent() {
-		return costRent;
-	}
-
-	public void setCostRent(Long costRent) {
-		this.costRent = costRent;
-	}
-
-	public String getCostDescription() {
-		return costDescription;
-	}
-
-	public void setCostDescription(String costDescription) {
-		this.costDescription = costDescription;
-	}
-
-	public String getServiceCost() {
-		return serviceCost;
-	}
-
-	public void setServiceCost(String serviceCost) {
-		this.serviceCost = serviceCost;
-	}
-
-	public String getCarCost() {
-		return carCost;
-	}
-
-	public void setCarCost(String carCost) {
-		this.carCost = carCost;
-	}
-
-	public String getMotorbikeCost() {
-		return motorbikeCost;
-	}
-
-	public void setMotorbikeCost(String motorbikeCost) {
-		this.motorbikeCost = motorbikeCost;
-	}
-
-	public String getOvertimeCost() {
-		return overtimeCost;
-	}
-
-	public void setOvertimeCost(String overtimeCost) {
-		this.overtimeCost = overtimeCost;
-	}
-
-	public String getElectricityCost() {
-		return electricityCost;
-	}
-
-	public void setElectricityCost(String electricityCost) {
-		this.electricityCost = electricityCost;
-	}
-
-	public String getDeposit() {
-		return deposit;
-	}
-
-	public void setDeposit(String deposit) {
-		this.deposit = deposit;
-	}
-
-	public String getPayment() {
-		return payment;
-	}
-
-	public void setPayment(String payment) {
-		this.payment = payment;
-	}
-
-	public String getTimeRent() {
-		return timeRent;
-	}
-
-	public void setTimeRent(String timeRent) {
-		this.timeRent = timeRent;
-	}
-
-	public String getTimeDecorator() {
-		return timeDecorator;
-	}
-
-	public void setTimeDecorator(String timeDecorator) {
-		this.timeDecorator = timeDecorator;
-	}
-
-	public String getManagerName() {
-		return managerName;
-	}
-
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
-	}
-
-	public String getManagerPhone() {
-		return managerPhone;
-	}
-
-	public void setManagerPhone(String managerPhone) {
-		this.managerPhone = managerPhone;
-	}
-
-	public String[] getBuildingType() {
-		return buildingType;
-	}
-
-	public void setBuildingType(String[] buildingType) {
-		this.buildingType = buildingType;
-	}
-	
-	public BuildingDTO() {
-		
-	}
-
-	public Long getCostRentFrom() {
-		return costRentFrom;
-	}
-
-	public void setCostRentFrom(Long costRentFrom) {
-		this.costRentFrom = costRentFrom;
-	}
-
-	public Long getCostRentTo() {
-		return costRentTo;
-	}
-
-	public void setCostRentTo(Long costRentTo) {
-		this.costRentTo = costRentTo;
-	}
-
-	public Long getAreaRentFrom() {
-		return areaRentFrom;
-	}
-
-	public void setAreaRentFrom(Long areaRentFrom) {
-		this.areaRentFrom = areaRentFrom;
-	}
-
-	public Long getAreaRentTo() {
-		return areaRentTo;
-	}
-
-	public void setAreaRentTo(Long areaRentTo) {
-		this.areaRentTo = areaRentTo;
-	}
-
-	public Long getStaffId() {
-		return staffId;
-	}
-
-	public void setStaffId(Long staffId) {
-		this.staffId = staffId;
-	}
-
-	public String getRentArea() {
-		return rentArea;
-	}
-
-	public void setRentArea(String rentArea) {
-		this.rentArea = rentArea;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public String getRank() {
 		return rank;
-	}
-
-	public void setRank(String rank) {
-		this.rank = rank;
 	}
 
 	public String getDirection() {
 		return direction;
 	}
 
+	public List<RentArea> getRentAreaList() {
+		return rentAreaList;
+	}
+
+	public Long getRentCost() {
+		return rentCost;
+	}
+
+	public String getServiceCost() {
+		return serviceCost;
+	}
+
+	public String getCarCost() {
+		return carCost;
+	}
+
+	public String getMotorbikeCost() {
+		return motorbikeCost;
+	}
+
+	public String getOvertimeCost() {
+		return overtimeCost;
+	}
+
+	public String getElectricityCost() {
+		return electricityCost;
+	}
+
+	public String getDeposit() {
+		return deposit;
+	}
+
+	public String getPayment() {
+		return payment;
+	}
+
+	public String getRentTime() {
+		return rentTime;
+	}
+
+	public String getDecoratorTime() {
+		return decoratorTime;
+	}
+
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public String getManagerPhone() {
+		return managerPhone;
+	}
+
+	public Long getRentCostFrom() {
+		return rentCostFrom;
+	}
+
+	public Long getRentCostTo() {
+		return rentCostTo;
+	}
+
+	public Long getRentAreaFrom() {
+		return rentAreaFrom;
+	}
+
+	public Long getRentAreaTo() {
+		return rentAreaTo;
+	}
+
+	public String getCostDescription() {
+		return costDescription;
+	}
+
+	public String[] getBuildingType() {
+		return buildingType;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public Long getStaffId() {
+		return staffId;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setNumberOfBasement(Long numberOfBasement) {
+		this.numberOfBasement = numberOfBasement;
+	}
+
+	public void setBuildingArea(Long buildingArea) {
+		this.buildingArea = buildingArea;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+
+	public void setWard(String ward) {
+		this.ward = ward;
+	}
+
+	public void setRentArea(String rentArea) {
+		this.rentArea = rentArea;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public void setStructure(String structure) {
+		this.structure = structure;
+	}
+
+	public void setRank(String rank) {
+		this.rank = rank;
+	}
+
 	public void setDirection(String direction) {
 		this.direction = direction;
 	}
-	
 
+	public void setRentCost(Long rentCost) {
+		this.rentCost = rentCost;
+	}
 
+	public void setServiceCost(String serviceCost) {
+		this.serviceCost = serviceCost;
+	}
+
+	public void setCarCost(String carCost) {
+		this.carCost = carCost;
+	}
+
+	public void setMotorbikeCost(String motorbikeCost) {
+		this.motorbikeCost = motorbikeCost;
+	}
+
+	public void setOvertimeCost(String overtimeCost) {
+		this.overtimeCost = overtimeCost;
+	}
+
+	public void setElectricityCost(String electricityCost) {
+		this.electricityCost = electricityCost;
+	}
+
+	public void setDeposit(String deposit) {
+		this.deposit = deposit;
+	}
+
+	public void setPayment(String payment) {
+		this.payment = payment;
+	}
+
+	public void setRentTime(String rentTime) {
+		this.rentTime = rentTime;
+	}
+
+	public void setDecoratorTime(String decoratorTime) {
+		this.decoratorTime = decoratorTime;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
+	}
+
+	public void setManagerPhone(String managerPhone) {
+		this.managerPhone = managerPhone;
+	}
+
+	public void setRentCostFrom(Long rentCostFrom) {
+		this.rentCostFrom = rentCostFrom;
+	}
+
+	public void setRentCostTo(Long rentCostTo) {
+		this.rentCostTo = rentCostTo;
+	}
+
+	public void setRentAreaFrom(Long rentAreaFrom) {
+		this.rentAreaFrom = rentAreaFrom;
+	}
+
+	public void setRentAreaTo(Long rentAreaTo) {
+		this.rentAreaTo = rentAreaTo;
+	}
+
+	public void setCostDescription(String costDescription) {
+		this.costDescription = costDescription;
+	}
+
+	public void setBuildingType(String[] buildingType) {
+		this.buildingType = buildingType;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setStaffId(Long staffId) {
+		this.staffId = staffId;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 }

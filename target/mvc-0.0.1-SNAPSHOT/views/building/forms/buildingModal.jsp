@@ -75,7 +75,7 @@
 								<div class="col-sm-4">
 										<label for="form-field-8">Giá thuê</label>
 
-										<input class="form-control" name="costRent" id="form-field-8" placeholder=""></input>
+										<input class="form-control" name="rentCost" id="form-field-8" placeholder=""></input>
 									</div>
 								<div class="col-sm-4">
 										<label for="form-field-8">Mô tả giá</label>
