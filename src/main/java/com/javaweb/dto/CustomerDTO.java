@@ -12,7 +12,8 @@ public class CustomerDTO extends AbstractDTO{
 	private Byte status;
 	private Long staffId;
 	private long[] ids;
-	
+
+
 	public Long getId() {
 		return id;
 	}
@@ -73,5 +74,5 @@ public class CustomerDTO extends AbstractDTO{
 	public void setIds(long[] ids) {
 		this.ids = ids;
 	}
-	
+
 }

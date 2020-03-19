@@ -7,8 +7,8 @@ public class UserDTO extends AbstractDTO{
 	private Integer status;
 	private Integer buildingId;
 	private String checked = "";
-	
-	
+
+
 	public Long getId() {
 		return id;
 	}
@@ -39,6 +39,6 @@ public class UserDTO extends AbstractDTO{
 	public void setChecked(String checked) {
 		this.checked = checked;
 	}
-	
-	
+
+
 }

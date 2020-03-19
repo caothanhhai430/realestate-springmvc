@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import com.javaweb.dto.UserDTO;
+import com.javaweb.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,10 +28,9 @@ public class BuildingController {
 
 	@Autowired
 	private IBuildingService service;
-	
-	@Autowired
-	private BuildingRepository repository;
 
+	@Autowired
+	private IUserService userService;
 	
 	@GetMapping("/admin/building")
 	public ModelAndView list(@Valid @ModelAttribute("buildingRequest") BuildingDTO buildingRequest,
@@ -46,8 +47,10 @@ public class BuildingController {
 		
 		List<BuildingDTO> results = service.findAll(buildingRequest,pageRequest);
 
+		Map<Long,String> staffMap = userService.findAll();
 
 
+		modelView.addObject("staffMap",staffMap);
 		modelView.addObject("buildingRequest", buildingRequest);
 		modelView.addObject("buildingList", results);
 		modelView.addObject("districtsMap", districtsMap);

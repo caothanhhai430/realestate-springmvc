@@ -5,58 +5,63 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.javaweb.Helper.ObjectToMap;
-import com.javaweb.builder.CustomerSearchBuilder;
+import com.javaweb.builder.StaffSearchBuilder;
 import com.javaweb.converter.DTOConverter;
 import com.javaweb.dto.CustomerDTO;
-import com.javaweb.entity.StaffEntity;
+import com.javaweb.entity.CustomerEntity;
 import com.javaweb.paging.Pageable;
-import com.javaweb.repository.impl.CustomerRepository;
+import com.javaweb.repository.CustomerRepository;
 import com.javaweb.service.ICustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class CustomerService implements ICustomerService{
+@Service
+public class CustomerService implements ICustomerService {
+
+	@Autowired
+	CustomerRepository repository;
 
 	@Override
 	public List<CustomerDTO> findAll(CustomerDTO dto, Pageable pageable) {
-		CustomerSearchBuilder singleFieldBuilder = new CustomerSearchBuilder.Builder()
+		StaffSearchBuilder singleFieldBuilder = new StaffSearchBuilder.Builder()
 				.setName(dto.getName()).setEmail(dto.getEmail())
 				.setPhone(dto.getPhone()).build();
-		CustomerSearchBuilder specialFieldBuilder = new CustomerSearchBuilder.Builder()
+		StaffSearchBuilder specialFieldBuilder = new StaffSearchBuilder.Builder()
 				.setStaffId(dto.getStaffId()).build();
 		
 		Map<String,Object> properties = ObjectToMap.toMap(singleFieldBuilder);
-		return new CustomerRepository()
-				.findAll(properties,pageable,specialFieldBuilder).stream()
-				.map(item-> (CustomerDTO)DTOConverter.toModel(item,CustomerDTO.class))
+		return repository.findAll().stream()
+				.map(item-> (CustomerDTO)DTOConverter.toModel(item, CustomerDTO.class))
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public CustomerDTO findById(long id) {
-		StaffEntity en = new CustomerRepository().findById(id);
-		return DTOConverter.toModel(en, CustomerDTO.class);
-		
+		return null;
 	}
+
 
 	@Override
 	public Long save(CustomerDTO customer) {
-		StaffEntity entity = DTOConverter.toModel(customer,StaffEntity.class);
-		return new CustomerRepository().save(entity);
+		CustomerEntity entity = DTOConverter.toModel(customer, CustomerEntity.class);
+		return repository.save(entity).getId();
 	}
 
 	@Override
 	public Long update(CustomerDTO customer) {
-		StaffEntity entity = DTOConverter.toModel(customer,StaffEntity.class);
-		return new CustomerRepository().update(entity);
+		CustomerEntity entity = DTOConverter.toModel(customer, CustomerEntity.class);
+		return repository.save(entity).getId();
 	}
 
 	@Override
 	public void delete(long[] id) {
-		new CustomerRepository().delete(id);
+
 	}
 
 	@Override
 	public void delete(long id) {
-		new CustomerRepository().delete(id);
+
 	}
+
 
 }

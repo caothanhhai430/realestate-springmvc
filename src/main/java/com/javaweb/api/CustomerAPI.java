@@ -10,68 +10,46 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
-import com.javaweb.converter.DTOConverter;
-import com.javaweb.dto.CustomerDTO;
-import com.javaweb.entity.StaffEntity;
 import com.javaweb.dto.CustomerDTO;
 import com.javaweb.paging.impl.PageRequest;
-import com.javaweb.repository.impl.CustomerRepository;
 import com.javaweb.service.impl.CustomerService;
-import com.javaweb.service.impl.CustomerService;
-import com.javaweb.utils.FormUtils;
 import com.javaweb.utils.HttpUtil;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @WebServlet(urlPatterns= {"/api-server/customer"})
 public class CustomerAPI extends HttpServlet{
-	private static final long serialVersionUID = -3295693792425119026L;
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
-		resp.setContentType("application/json;");
-		
-		CustomerDTO customerRequest = FormUtils.toModel(CustomerDTO.class, req);
-		PageRequest pageRequest = FormUtils.toModel(PageRequest.class, req);
-		
-		
+	@GetMapping("/list")
+	public List<CustomerDTO> findAll(@ModelAttribute CustomerDTO customerRequest,@ModelAttribute PageRequest pageRequest){
 		List<CustomerDTO> results =  new CustomerService().findAll(customerRequest, pageRequest);
-		ObjectMapper obj = new ObjectMapper();
-		obj.writeValue(resp.getOutputStream(), results);
-		
+		return  results;
 	}
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ObjectMapper obj = new ObjectMapper();
-		req.setCharacterEncoding("UTF-8");
-		resp.setContentType("application/json");
-		CustomerDTO Customer = HttpUtil.of(req.getReader()).toModel(CustomerDTO.class);
-		Customer.setCreatedBy("admin");
-		Customer.setModifiedBy("admin");
-		Customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		Customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+	@PostMapping
+	protected CustomerDTO newCustomer(@ModelAttribute CustomerDTO customer){
+		customer.setCreatedBy("admin");
+		customer.setModifiedBy("admin");
+		customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 		
 		CustomerService service = new CustomerService();
-		Long id = service.save(Customer);		
+		Long id = service.save(customer);
 		CustomerDTO get = service.findById(id);
-		obj.writeValue(resp.getOutputStream(), get);
+		return get;
 	}
 
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ObjectMapper obj = new ObjectMapper();
-		req.setCharacterEncoding("UTF-8");
-		resp.setContentType("application/json");
-		CustomerDTO Customer = HttpUtil.of(req.getReader()).toModel(CustomerDTO.class);
-		Customer.setModifiedBy("admin");
-		Customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+	@PutMapping
+	public CustomerDTO update(@ModelAttribute CustomerDTO customer){
+		customer.setModifiedBy("admin");
+		customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 		
 		CustomerService service = new CustomerService();
-		Long id = service.update(Customer);		
+		Long id = service.update(customer);
 		CustomerDTO get = service.findById(id);
-		obj.writeValue(resp.getOutputStream(), get);
+		return get;
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.javaweb.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -84,16 +83,20 @@ public class BuildingEntity{
 	private String type;
 
 	@OneToMany(mappedBy="building",fetch = FetchType.EAGER)
-	private List<RentArea> rentAreaList;
+	private List<RentAreaEntity> rentAreaList;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			  name = "assignmentstaff",
 			  joinColumns = @JoinColumn(name = "buildingid"),
 			  inverseJoinColumns = @JoinColumn(name = "staffid"))
-	Set<StaffEntity> staffList;
+	Set<UserEntity> staffList;
 
-	public Set<StaffEntity> getStaffs(){
+	public void setStaffList(Set<UserEntity> staffList) {
+		this.staffList = staffList;
+	}
+
+	public Set<UserEntity> getStaffs(){
 		return staffList;
 	}
 
@@ -186,11 +189,11 @@ public class BuildingEntity{
 		return type;
 	}
 
-	public List<RentArea> getRentAreaList() {
+	public List<RentAreaEntity> getRentAreaList() {
 		return rentAreaList;
 	}
 
-	public Set<StaffEntity> getStaffList() {
+	public Set<UserEntity> getStaffList() {
 		return staffList;
 	}
 }

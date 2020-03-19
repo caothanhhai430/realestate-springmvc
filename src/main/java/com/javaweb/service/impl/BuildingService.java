@@ -1,9 +1,6 @@
 package com.javaweb.service.impl;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -15,7 +12,6 @@ import com.javaweb.builder.BuildingSearchBuilder;
 import com.javaweb.converter.DTOConverter;
 import com.javaweb.dto.BuildingDTO;
 import com.javaweb.entity.BuildingEntity;
-import com.javaweb.entity.StaffEntity;
 import com.javaweb.paging.Pageable;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.service.IBuildingService;
@@ -39,9 +35,8 @@ public class BuildingService implements IBuildingService{
 				.setWard(dto.getWard()).setStreet(dto.getStreet()).build();
 		
 		Map<String,Object> properties = ObjectToMap.toMap(singleFieldBuilder);
-		Iterable<BuildingEntity> data =   repository
+		List<BuildingEntity> results =   repository
 				.findAll(properties,pageable,specialFieldBuilder);
-		List<BuildingEntity> results = StreamSupport.stream(data.spliterator(),false).collect(Collectors.toList());
 		return results.stream()
 				.map(item-> {
 					BuildingDTO temp = (BuildingDTO)DTOConverter.toModel(item,BuildingDTO.class);
@@ -51,8 +46,7 @@ public class BuildingService implements IBuildingService{
 	}
 	
 	public List<BuildingDTO> findAll(){
-		Iterable<BuildingEntity> data =   repository.findAll();
-		List<BuildingEntity> results = StreamSupport.stream(data.spliterator(),false).collect(Collectors.toList());
+		List<BuildingEntity> results =   repository.findAll();
 		return results.stream()
 				.map(item-> {
 					BuildingDTO temp = (BuildingDTO)DTOConverter.toModel(item,BuildingDTO.class);
@@ -61,17 +55,14 @@ public class BuildingService implements IBuildingService{
 				}).collect(Collectors.toList());
 	}
 
-//	@Override
-//	public BuildingDTO findById(long id) {
-//		BuildingEntity entity = new BuildingRepository().findById((int)id);
-//		String tempRentArea = Arrays.stream(entity.getRentAreaArr())
-//				.map(e-> e.getValue().toString()).collect(Collectors.joining(","));
-	
-//		BuildingDTO dto = DTOConverter.toModel(entity, BuildingDTO.class);
-//		dto.setRentArea(tempRentArea);
-//		return dto;
-//	}
-//
+	@Override
+	public BuildingDTO findById(long id) {
+		BuildingEntity entity = repository.findById(id).get();
+		BuildingDTO dto = DTOConverter.toModel(entity, BuildingDTO.class);
+
+		return dto;
+	}
+
 //	@Override
 //	public Long save(BuildingDTO building) {
 //		BuildingRepository repository = new BuildingRepository();
@@ -131,9 +122,4 @@ public class BuildingService implements IBuildingService{
 		return null;
 	}
 
-	@Override
-	public BuildingDTO findById(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

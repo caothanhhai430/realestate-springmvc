@@ -1,16 +1,16 @@
 package com.javaweb.dto;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.javaweb.entity.RentArea;
-import lombok.Getter;
-import lombok.Setter;
+import com.javaweb.entity.RentAreaEntity;
 import org.apache.commons.lang.StringUtils;
 
 import com.javaweb.enums.BuildingTypeEnum;
 import com.javaweb.enums.DistrictEnum;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class BuildingDTO extends AbstractDTO{
 	
@@ -25,7 +25,7 @@ public class BuildingDTO extends AbstractDTO{
 	private String structure;
 	private String rank;
 	private String direction;
-	private List<RentArea> rentAreaList;
+	private List<RentAreaDTO> rentAreaList;
 	
 	private Long rentCost;
 	private String serviceCost;
@@ -83,7 +83,7 @@ public class BuildingDTO extends AbstractDTO{
 		return tempRentArea;
 	}
 
-	public void setRentAreaList(List<RentArea> rentAreaList) {
+	public void setRentAreaList(List<RentAreaDTO> rentAreaList) {
 		this.rentAreaList = rentAreaList;
 	}
 
@@ -127,7 +127,7 @@ public class BuildingDTO extends AbstractDTO{
 		return direction;
 	}
 
-	public List<RentArea> getRentAreaList() {
+	public List<RentAreaDTO> getRentAreaList() {
 		return rentAreaList;
 	}
 
@@ -337,5 +337,20 @@ public class BuildingDTO extends AbstractDTO{
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public static BuildingDTO newObj(){
+		return new BuildingDTO();
+	}
+
+	public static BuildingDTO jsonToObj(String json){
+		ObjectMapper obj = new ObjectMapper();
+		try {
+			BuildingDTO result = obj.readValue(json,BuildingDTO.class);
+			return  result;
+		} catch (IOException e) {
+			return new BuildingDTO();
+		}
+
 	}
 }

@@ -7,12 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
-import com.javaweb.Helper.MapToSqlSearch;
-import com.javaweb.Helper.PageToSqlSearch;
 import com.javaweb.builder.BuildingSearchBuilder;
-import com.javaweb.builder.SqlBuilder;
 import com.javaweb.entity.BuildingEntity;
-import com.javaweb.entity.RentArea;
 import com.javaweb.paging.Pageable;
 import com.javaweb.repository.BuildingRepositoryCustom;
 
@@ -20,7 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Repository
-public class BuildingRepositoryCustomImpl extends SimpleRepository<BuildingEntity> implements BuildingRepositoryCustom{
+public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 
 	@PersistenceContext
 	private EntityManager em;
@@ -31,8 +27,8 @@ public class BuildingRepositoryCustomImpl extends SimpleRepository<BuildingEntit
 
 		String s = getSpecialSQL(builder);
 		List<BuildingEntity> results = (List<BuildingEntity>) em.createQuery(
-				"select building from BuildingEntity building inner join building.staffList staff where " +
-						"1=1 AND staff.id=8 "  + getSpecialSQL(builder))
+				"select building from BuildingEntity building  where 1=1 " +
+						 getSpecialSQL(builder))
 				.getResultList();
 
 		return results;
