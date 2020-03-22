@@ -46,7 +46,7 @@
                         <div class="col-sm-4">
                             <label for="form-field-8">Quận,Huyện</label>
 
-                            <select class="form-control" path="district" id="form-field-8">
+                            <select class="form-control" path="district" >
                                 <option value=""></option>
                                 <c:forEach items="${districtsMap}" var="district">
                                     <option value="${district.key}">${district.value}</option>
@@ -105,7 +105,7 @@
                         <div class="col-sm-4">
                             <label for="form-field-8">Nhân viên vụ trách</label>
 
-                            <form:select class="form-control" path="staffId" id="form-field-8">
+                            <form:select class="form-control" path="staffId" >
                                 <form:option value="" label="--- Select ---" />
                                 <form:options items="${staffMap}" />
                             </form:select>
@@ -123,7 +123,7 @@
 
                     <div id="form-field-11" class="autosize-transition form-control"
                         style="overflow: hidden; padding: 0px;border: 0px; height: 0px;"></div>
-                    <button type="submit" class="btn btn-purple btn-sm">
+                    <button id="btn_search" type="button" class="btn btn-purple btn-sm">
                         <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
                         Search
                     </button>

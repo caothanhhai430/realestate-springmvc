@@ -19,4 +19,5 @@ public interface IUserService {
 	public void delete(long id);
 	public Map<Long,String> findAll();
 	public boolean assign(List<Long> staffId, Long buildingId);
+//	public long count(UserDTO dto);
 }

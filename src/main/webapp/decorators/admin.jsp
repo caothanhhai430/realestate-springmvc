@@ -17,20 +17,8 @@
 
 
 			<sitemesh:write property='body'/>
-	
-				<!-- footer -->
-				<%@ include file="/common/footer.jsp" %>
-
 		
-			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-			</a>
 		</div><!-- /.main-container -->
-
-		<!-- basic scripts -->
-			<!-- lib -->
-
-			<%@ include file="/common/lib.jsp" %>
 
 	</body>
 </html>

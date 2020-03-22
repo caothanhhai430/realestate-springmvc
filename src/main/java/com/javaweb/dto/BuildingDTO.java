@@ -3,6 +3,7 @@ package com.javaweb.dto;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.javaweb.entity.RentAreaEntity;
@@ -25,7 +26,7 @@ public class BuildingDTO extends AbstractDTO{
 	private String structure;
 	private String rank;
 	private String direction;
-	private List<RentAreaDTO> rentAreaList;
+	private Set<RentAreaDTO> rentAreaList;
 	
 	private Long rentCost;
 	private String serviceCost;
@@ -52,9 +53,7 @@ public class BuildingDTO extends AbstractDTO{
 	
 	
 	public String getBuildingTypeArray() {
-		if(StringUtils.isNotBlank(type)) {
-			buildingType = type.replaceAll("\\s+","").split(",");
-		}
+		getBuildingType();
 		if(buildingType==null || buildingType.length<1) return "";
 		String result = Arrays.stream(buildingType)
 				.map(e->BuildingTypeEnum.valueOf(e).getBuildingType())
@@ -76,6 +75,7 @@ public class BuildingDTO extends AbstractDTO{
 	}
 
 	public String getRentArea() {
+		if(rentArea == null || rentArea.isEmpty()) return "";
 		if(rentAreaList==null) return  "";
 
 		String tempRentArea = rentAreaList.stream()
@@ -83,7 +83,15 @@ public class BuildingDTO extends AbstractDTO{
 		return tempRentArea;
 	}
 
-	public void setRentAreaList(List<RentAreaDTO> rentAreaList) {
+	public String getBuildingTypeString() {
+		if(buildingType	== null) return "";
+		String tempBuildingType = Arrays.stream(buildingType).map(e-> e).collect(Collectors.joining(","));
+		return tempBuildingType;
+	}
+
+
+
+	public void setRentAreaList(Set<RentAreaDTO> rentAreaList) {
 		this.rentAreaList = rentAreaList;
 	}
 
@@ -127,7 +135,7 @@ public class BuildingDTO extends AbstractDTO{
 		return direction;
 	}
 
-	public List<RentAreaDTO> getRentAreaList() {
+	public Set<RentAreaDTO> getRentAreaList() {
 		return rentAreaList;
 	}
 
@@ -200,6 +208,9 @@ public class BuildingDTO extends AbstractDTO{
 	}
 
 	public String[] getBuildingType() {
+		if(StringUtils.isNotBlank(type)) {
+			buildingType = type.replaceAll("\\s+", "").split(",");
+		}
 		return buildingType;
 	}
 
@@ -339,18 +350,4 @@ public class BuildingDTO extends AbstractDTO{
 		this.address = address;
 	}
 
-	public static BuildingDTO newObj(){
-		return new BuildingDTO();
-	}
-
-	public static BuildingDTO jsonToObj(String json){
-		ObjectMapper obj = new ObjectMapper();
-		try {
-			BuildingDTO result = obj.readValue(json,BuildingDTO.class);
-			return  result;
-		} catch (IOException e) {
-			return new BuildingDTO();
-		}
-
-	}
 }

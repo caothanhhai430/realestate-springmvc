@@ -11,9 +11,10 @@ import javax.persistence.*;
 @Table(name="rentarea")
 public class RentAreaEntity extends AbstractEntity{
 	@Column(name="id")
-	@Id	
-	private Integer id;
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
 	@Column(name="value")
 	private Integer value;
 
@@ -24,5 +25,14 @@ public class RentAreaEntity extends AbstractEntity{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="buildingid")
 	private BuildingEntity building;
-	
+
+	public RentAreaEntity() {
+	}
+	public RentAreaEntity(Integer value){
+		this.value = value;
+	}
+
+	public void setBuilding(BuildingEntity building) {
+		this.building = building;
+	}
 }

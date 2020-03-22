@@ -18,18 +18,17 @@
 						<div class="col-sm-4">
 							<label for="form-field-8">Tên tòa nhà</label>
 
-							<input class="form-control z-field" name="name"  placeholder=""/>
+							<input class="form-control z-field" name="name" placeholder="" />
 						</div>
 						<div class="col-sm-4">
 							<label for="form-field-8">Diện tích sàn</label>
 
-							<input class="form-control z-field" name="buildingArea"  placeholder=""/>
+							<input class="form-control z-field" name="buildingArea" placeholder="" />
 						</div>
 						<div class="col-sm-4">
 							<label for="form-field-8">Số tầng hầm</label>
 
-							<input class="form-control z-field" name="numberOfBasement" 
-								placeholder=""/>
+							<input class="form-control z-field" name="numberOfBasement" placeholder="" />
 						</div>
 
 					</div>
@@ -37,22 +36,22 @@
 						<div class="col-sm-4">
 							<label for="form-field-8">Quận,Huyện</label>
 
-							<select class="form-control z-field" name="district" >
+							<select class="form-control z-field" name="district">
 								<option value=""></option>
-								<c:forEach var="district" items="${districtsMap.entrySet}">
-									<option value="${district.getKey}">${district.getValue}</option>
+								<c:forEach items="${districtsMap}" var="district">
+									<option value="${district.key}">${district.value}</option>
 								</c:forEach>
 							</select>
 						</div>
 						<div class="col-sm-4">
 							<label for="form-field-8">Phường</label>
 
-							<input class="form-control z-field" name="ward"  placeholder=""/>
+							<input class="form-control z-field" name="ward" placeholder="" />
 						</div>
 						<div class="col-sm-4">
 							<label for="form-field-8">Đường</label>
 
-							<input class="form-control z-field" name="street"  placeholder=""/>
+							<input class="form-control z-field" name="street" placeholder="" />
 						</div>
 
 					</div>
@@ -61,12 +60,12 @@
 						<div class="col-sm-3">
 							<label for="form-field-8">Kết cấu</label>
 
-							<input class="form-control z-field" name="structure"  placeholder=""/>
+							<input class="form-control z-field" name="structure" placeholder="" />
 						</div>
 						<div class="col-sm-3">
 							<label for="form-field-8">Diện tích thuê</label>
 
-							<input class="form-control z-field" name="rentArea"  placeholder=""/>
+							<input class="form-control z-field" name="rentArea" placeholder="" />
 						</div>
 
 					</div>
@@ -76,17 +75,17 @@
 						<div class="col-sm-4">
 							<label for="form-field-8">Giá thuê</label>
 
-							<input class="form-control z-field" name="rentCost"  placeholder=""/>
+							<input class="form-control z-field" name="rentCost" placeholder="" />
 						</div>
 						<div class="col-sm-4">
 							<label for="form-field-8">Mô tả giá</label>
 
-							<input class="form-control z-field" name="costDescription"  placeholder=""/>
+							<input class="form-control z-field" name="costDescription" placeholder="" />
 						</div>
 						<div class="col-sm-4">
 							<label for="form-field-8">Phí dịch vụ</label>
 
-							<input class="form-control z-field" name="serviceCost"  placeholder=""/>
+							<input class="form-control z-field" name="serviceCost" placeholder="" />
 						</div>
 
 					</div>
@@ -96,17 +95,17 @@
 						<div class="col-sm-4">
 							<label for="form-field-8">Phí xe hơi</label>
 
-							<input class="form-control z-field" name="carCost"  placeholder=""/>
+							<input class="form-control z-field" name="carCost" placeholder="" />
 						</div>
 						<div class="col-sm-4">
 							<label for="form-field-8">Phí mô tô</label>
 
-							<input class="form-control z-field" name="motorbikeCost"  placeholder=""/>
+							<input class="form-control z-field" name="motorbikeCost" placeholder="" />
 						</div>
 						<div class="col-sm-4">
 							<label for="form-field-8">phí ngoài giờ</label>
 
-							<input class="form-control z-field" name="overtimeCost" id=" form-field-8" placeholder=""/>
+							<input class="form-control z-field" name="overtimeCost" id=" form-field-8" placeholder="" />
 						</div>
 
 					</div>
@@ -117,22 +116,22 @@
 						<div class="col-sm-3">
 							<label for="form-field-8">Phí môi giới</label>
 
-							<input class="form-control z-field"   placeholder=""/>
+							<input class="form-control z-field" placeholder="" />
 						</div>
 						<div class="col-sm-3">
 							<label for="form-field-8">Tiền điện</label>
 
-							<input class="form-control z-field" name="electricityCost"  placeholder=""/>
+							<input class="form-control z-field" name="electricityCost" placeholder="" />
 						</div>
 						<div class="col-sm-3">
 							<label for="form-field-8">Đặt cọc</label>
 
-							<input class="form-control z-field" name="deposit"  placeholder=""/>
+							<input class="form-control z-field" name="deposit" placeholder="" />
 						</div>
 						<div class="col-sm-3">
 							<label for="form-field-8">Thanh toán</label>
 
-							<input class="form-control z-field" name="payment"  placeholder=""/>
+							<input class="form-control z-field" name="payment" placeholder="" />
 						</div>
 
 					</div>
@@ -142,33 +141,36 @@
 						<div class="col-sm-3">
 							<label for="form-field-8">Thời gian thuê</label>
 
-							<input class="form-control z-field" name="rentTime"  placeholder=""/>
+							<input class="form-control z-field" name="rentTime" placeholder="" />
 						</div>
 						<div class="col-sm-3">
 							<label for="form-field-8">Thời gian trang trí</label>
 
-							<input class="form-control z-field" name="decoratorTime"  placeholder=""/>
+							<input class="form-control z-field" name="decoratorTime" placeholder="" />
 						</div>
 						<div class="col-sm-3">
 							<label for="form-field-8">Tên quản lý</label>
 
-							<input class="form-control z-field" name="managerName"  placeholder=""/>
+							<input class="form-control z-field" name="managerName" placeholder="" />
 						</div>
 
 						<div class="col-sm-3">
 							<label for="form-field-8">SĐT quản lý</label>
 
-							<input class="form-control z-field" name="managerPhone"  placeholder=""/>
+							<input class="form-control z-field" name="managerPhone" placeholder="" />
 						</div>
 
 					</div>
 
 
-					<div>
-						<c:forEach var="buildingType" items="${buildingTypesMap.entrySet}">
-							<input type="checkbox"  value="${buildingType.getKey}">
-							${buildingType.getValue}
-						</c:forEach>
+
+					<div class="form-group building-type-checkbox">
+
+						<div class="col-sm-12">
+							<input class="z-field" type="checkbox" name="buildingType" value="NOI_THAT" /> Nội thất
+							<input class="z-field" type="checkbox" name="buildingType" value="TANG_TRET" /> Tầng trệt
+							<input class="z-field" type="checkbox" name="buildingType" value="NGUYEN_CAN" /> Nguyên căn
+						</div>
 					</div>
 
 
@@ -180,13 +182,12 @@
 				</div>
 				<div class="modal-footer">
 					<button id="submit_save" type="button" class="btn btn-default">
-						<span"></span>
 							Thêm mới
 					</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
 				</div>
-				
-				<input id="modal_buildingId" type="hidden" value="">
+
+				<input id="modal_buildingId" name="id" type="hidden" value="">
 			</form>
 		</div>
 

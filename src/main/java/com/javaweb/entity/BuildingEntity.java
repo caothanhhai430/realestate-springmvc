@@ -83,7 +83,7 @@ public class BuildingEntity{
 	private String type;
 
 	@OneToMany(mappedBy="building",fetch = FetchType.EAGER)
-	private List<RentAreaEntity> rentAreaList;
+	private Set<RentAreaEntity> rentAreaList;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -189,11 +189,103 @@ public class BuildingEntity{
 		return type;
 	}
 
-	public List<RentAreaEntity> getRentAreaList() {
+	public Set<RentAreaEntity> getRentAreaList() {
 		return rentAreaList;
 	}
 
 	public Set<UserEntity> getStaffList() {
 		return staffList;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setNumberOfBasement(Long numberOfBasement) {
+		this.numberOfBasement = numberOfBasement;
+	}
+
+	public void setBuildingArea(Long buildingArea) {
+		this.buildingArea = buildingArea;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+
+	public void setWard(String ward) {
+		this.ward = ward;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public void setStructure(String structure) {
+		this.structure = structure;
+	}
+
+	public void setRentCost(Long rentCost) {
+		this.rentCost = rentCost;
+	}
+
+	public void setCostDescription(String costDescription) {
+		this.costDescription = costDescription;
+	}
+
+	public void setServiceCost(String serviceCost) {
+		this.serviceCost = serviceCost;
+	}
+
+	public void setCarCost(String carCost) {
+		this.carCost = carCost;
+	}
+
+	public void setMotorbikeCost(String motorbikeCost) {
+		this.motorbikeCost = motorbikeCost;
+	}
+
+	public void setOvertimeCost(String overtimeCost) {
+		this.overtimeCost = overtimeCost;
+	}
+
+	public void setElectricityCost(String electricityCost) {
+		this.electricityCost = electricityCost;
+	}
+
+	public void setDeposit(String deposit) {
+		this.deposit = deposit;
+	}
+
+	public void setPayment(String payment) {
+		this.payment = payment;
+	}
+
+	public void setRentTime(String rentTime) {
+		this.rentTime = rentTime;
+	}
+
+	public void setDecoratorTime(String decoratorTime) {
+		this.decoratorTime = decoratorTime;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
+	}
+
+	public void setManagerPhone(String managerPhone) {
+		this.managerPhone = managerPhone;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setRentAreaList(Set<RentAreaEntity> rentAreaList) {
+		this.rentAreaList = rentAreaList;
 	}
 }
