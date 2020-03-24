@@ -35,13 +35,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
        <jsp.api.version>2.0</jsp.api.version>
       	
  </properties>
- 
- <dependencies>
- 	<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>5.1.6</version>
-</dependency>
+    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+    <dependencies>
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.13</version>
+    </dependency>
+
 <!-- https://mvnrepository.com/artifact/org.jboss.weld.servlet/weld-servlet -->
 
 <dependency>

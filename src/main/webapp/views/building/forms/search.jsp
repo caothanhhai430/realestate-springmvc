@@ -33,7 +33,7 @@
                         <div class="col-sm-4">
                             <label for="form-field-8">Diện tích sàn</label>
 
-                            <form:input class="form-control" path="rentArea" />
+                            <form:input class="form-control" path="buildingArea" />
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">Số tầng hầm</label>
@@ -46,13 +46,10 @@
                         <div class="col-sm-4">
                             <label for="form-field-8">Quận,Huyện</label>
 
-                            <select class="form-control" path="district" >
-                                <option value=""></option>
-                                <c:forEach items="${districtsMap}" var="district">
-                                    <option value="${district.key}">${district.value}</option>
-                                </c:forEach>
-
-                            </select>
+                            <form:select class="form-control" path="district" >
+                                <form:option value="" label="--- Select ---" />
+                                <form:options items="${districtsMap}" />
+                            </form:select>
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">Phường</label>
@@ -125,7 +122,7 @@
                         style="overflow: hidden; padding: 0px;border: 0px; height: 0px;"></div>
                     <button id="btn_search" type="button" class="btn btn-purple btn-sm">
                         <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
-                        Search
+                        Tìm kiếm
                     </button>
 
 

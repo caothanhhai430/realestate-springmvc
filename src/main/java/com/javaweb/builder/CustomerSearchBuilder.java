@@ -1,6 +1,6 @@
 package com.javaweb.builder;
 
-public class StaffSearchBuilder {
+public class CustomerSearchBuilder {
 	private String name;
 	private String phone;
 	private String email;
@@ -18,10 +18,10 @@ public class StaffSearchBuilder {
 	public Long getStaffId() {
 		return staffId;
 	}
-	private StaffSearchBuilder() {
+	private CustomerSearchBuilder() {
 		
 	}
-	private StaffSearchBuilder(Builder builder) {
+	private CustomerSearchBuilder(Builder builder) {
 		this.name = builder.name;
 		this.email = builder.email;
 		this.phone = builder.phone;
@@ -61,8 +61,8 @@ public class StaffSearchBuilder {
 			this.staffId = staffId;
 			return this;
 		}
-		public StaffSearchBuilder build() {
-			return new StaffSearchBuilder(this);
+		public CustomerSearchBuilder build() {
+			return new CustomerSearchBuilder(this);
 		}
 		
 	}

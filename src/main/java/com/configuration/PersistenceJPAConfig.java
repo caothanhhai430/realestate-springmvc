@@ -38,8 +38,8 @@ public class PersistenceJPAConfig {
 	 @Bean
 	 public DataSource dataSource(){
 	     DriverManagerDataSource dataSource = new DriverManagerDataSource();
-	     dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-	     dataSource.setUrl("jdbc:mysql://localhost:3306/estatejdbc82019?characterEncoding=utf8");
+	     dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+	     dataSource.setUrl("jdbc:mysql://localhost:3306/estatejdbc82019?useUnicode=true&connectionCollation=utf8_general_ci&characterSetResults=utf8");
 	     dataSource.setUsername( "root" );
 	     dataSource.setPassword( "Messi3069" );
 	     return dataSource;
@@ -60,9 +60,10 @@ public class PersistenceJPAConfig {
 	 Properties additionalProperties() {
 	     Properties properties = new Properties();
 	     properties.setProperty("hibernate.hbm2ddl.auto", "update");
-	     properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-		 properties.setProperty("show_sql", "true");
-		 properties.setProperty("format_sql", "true");
+	     properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
+		 properties.setProperty("hibernate.show_sql", "true");
+		 properties.setProperty("hibernate.format_sql", "true");
+		 properties.setProperty("hibernate.enable_lazy_load_no_trans", "true");
 
 		 return properties;
 	 }

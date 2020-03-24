@@ -35,4 +35,20 @@ public class RentAreaEntity extends AbstractEntity{
 	public void setBuilding(BuildingEntity building) {
 		this.building = building;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setValue(Integer value) {
+		this.value = value;
+	}
+
+	public BuildingEntity getBuilding() {
+		return building;
+	}
 }

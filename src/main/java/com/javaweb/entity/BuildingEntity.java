@@ -8,11 +8,9 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-@Setter
-@Getter
 @Entity
 @Table(name="building")
-public class BuildingEntity{
+public class BuildingEntity extends AbstractEntity{
 	
 	@Column(name="id")
 	@Id
@@ -82,7 +80,10 @@ public class BuildingEntity{
 	@Column(name="type")
 	private String type;
 
-	@OneToMany(mappedBy="building",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy="building",
+			fetch = FetchType.EAGER,
+			cascade = CascadeType.ALL,
+			orphanRemoval = true)
 	private Set<RentAreaEntity> rentAreaList;
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -288,4 +289,5 @@ public class BuildingEntity{
 	public void setRentAreaList(Set<RentAreaEntity> rentAreaList) {
 		this.rentAreaList = rentAreaList;
 	}
+
 }

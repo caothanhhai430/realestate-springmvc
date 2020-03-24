@@ -1,8 +1,5 @@
 package com.javaweb.builder;
 
-import lombok.Getter;
-
-@Getter
 public class BuildingSearchBuilder {
 	private String name;
 	private Long numberOfBasement;
@@ -16,6 +13,8 @@ public class BuildingSearchBuilder {
 	private Long rentAreaTo;
 	private String[] buildingType;
 	private Long staffId;
+	private String managerName;
+	private String managerPhone;
 	
 	private BuildingSearchBuilder() {
 		
@@ -69,6 +68,14 @@ public class BuildingSearchBuilder {
 		return staffId;
 	}
 
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public String getManagerPhone() {
+		return managerPhone;
+	}
+
 	private BuildingSearchBuilder(Builder builder) {
 		
 		this.name = builder.name;
@@ -83,9 +90,10 @@ public class BuildingSearchBuilder {
 		this.rentCostFrom = builder.rentCostFrom;
 		this.rentCostTo = builder.rentCostTo;
 		this.staffId = builder.staffId;
+		this.managerName = builder.managerName;
+		this.managerPhone = builder.managerPhone;
 	}
 
-	@Getter
 	public static class Builder{
 		private String name;
 		private Long numberOfBasement;
@@ -99,7 +107,8 @@ public class BuildingSearchBuilder {
 		private Long rentAreaTo;
 		private String[] buildingType;
 		private Long staffId;
-		
+		private String managerName;
+		private String managerPhone;
 		public Builder() {
 			
 		}
@@ -169,8 +178,16 @@ public class BuildingSearchBuilder {
 			this.staffId = staffId;
 			return this;
 		}
-		
-		
+
+		public Builder setManagerName(String managerName) {
+			this.managerName = managerName;
+			return this;
+		}
+
+		public Builder setManagerPhone(String managerPhone) {
+			this.managerPhone = managerPhone;
+			return this;
+		}
 	}
 	
 }

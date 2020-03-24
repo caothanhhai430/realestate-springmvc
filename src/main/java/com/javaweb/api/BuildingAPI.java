@@ -50,7 +50,7 @@ public class BuildingAPI{
 	
 	@RequestMapping(value = "",method = RequestMethod.POST,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	public BuildingDTO newBuilding(@RequestBody BuildingDTO building) {
-		building.setCreatedBy("admin");
+			building.setCreatedBy("admin");
 		building.setModifiedBy("admin");
 		building.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		building.setModifiedDate(new Timestamp(System.currentTimeMillis()));
@@ -69,8 +69,7 @@ public class BuildingAPI{
 		building.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		building.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 
-//		service.update(building);
-		service.save(building);
+		service.update(building);
 		BuildingDTO resp = service.findById(building.getId());
 		return resp;
 	}

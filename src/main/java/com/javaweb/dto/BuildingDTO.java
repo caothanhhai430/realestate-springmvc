@@ -49,10 +49,12 @@ public class BuildingDTO extends AbstractDTO{
 	private String type;
 	private Long staffId;
 	private String address;
-	
-	
-	
-	public String getBuildingTypeArray() {
+	private String buildingTypeInString;
+
+
+
+
+	public String getBuildingTypeInString() {
 		getBuildingType();
 		if(buildingType==null || buildingType.length<1) return "";
 		String result = Arrays.stream(buildingType)
@@ -75,12 +77,12 @@ public class BuildingDTO extends AbstractDTO{
 	}
 
 	public String getRentArea() {
-		if(rentArea == null || rentArea.isEmpty()) return "";
-		if(rentAreaList==null) return  "";
+		if(rentArea != null && !rentArea.isEmpty()) return rentArea;
+		if(rentAreaList==null || rentAreaList.size()==0) return  "";
 
-		String tempRentArea = rentAreaList.stream()
+		return rentAreaList.stream()
 				.map(e-> e.getValue().toString()).collect(Collectors.joining(","));
-		return tempRentArea;
+
 	}
 
 	public String getBuildingTypeString() {
@@ -246,8 +248,9 @@ public class BuildingDTO extends AbstractDTO{
 		this.ward = ward;
 	}
 
-	public void setRentArea(String rentArea) {
-		this.rentArea = rentArea;
+	public void setRentArea(Object rentArea) {
+		if(rentArea instanceof CharSequence)
+		this.rentArea = (String) rentArea;
 	}
 
 	public void setStreet(String street) {

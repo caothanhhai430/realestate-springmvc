@@ -2,12 +2,14 @@ package com.javaweb.entity;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="user")
 public class UserEntity extends AbstractEntity{
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column
 	private String fullname;
@@ -41,5 +43,14 @@ public class UserEntity extends AbstractEntity{
 	@ManyToMany(mappedBy = "staffList",fetch = FetchType.LAZY	)
 	List<BuildingEntity> buildingList;
 
+	@ManyToMany(mappedBy = "staffList",fetch = FetchType.LAZY)
+	Set<CustomerEntity> customerList;
 
+	public List<BuildingEntity> getBuildingList() {
+		return buildingList;
+	}
+
+	public void setCustomerList(Set<CustomerEntity> customerList) {
+		this.customerList = customerList;
+	}
 }

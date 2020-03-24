@@ -5,48 +5,54 @@ $(document).ready(function () {
 
 
 
+  const buildingToTableRowHTML = (building)=>{
+    return `<td class="center">
+        <label class="pos-rel">
+            <input class="checkbox-delete c-id${building.id}" type="checkbox" class="ace">
+            
+        </label>
+    </td>
+    <td>
+        <a href="#">${building.name}</a>
+    </td>
+    <td>${building.address}</td>
+    <td>${building.managerName}</td>
+    <td>${building.managerPhone}</td>
+    <td>${building.buildingArea}</td>
+    <td>${building.rentCost}</td>
+    <td>${building.buildingTypeInString}</td>
+    <td>${building.rentArea}</td>
+    <td>
+        <div class="hidden-sm hidden-xs action-buttons">
+            <button id='btn_assign_code${building.id}' data-toggle="modal"
+                data-target="#modalStaff"
+                class="btn_assign ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
+                    <i class="ace-icon glyphicon glyphicon-user"></i></span></button>
+            <button id='btn_update_code${building.id}' data-toggle="modal" data-target="#myModal"
+                class="btn_update ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
+                    <i class="ace-icon fa fa-pencil bigger-130"></i></span></button>
+            <button id="btn_delete_code${building.id}"
+                class="btn_delete ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
+                    <i class="ace-icon fa fa-trash-o bigger-130"></i></span></button>
+
+        </div>
+
+    </td>`
+  }
+
   const loadData = (url) => {
     console.log(url);
     var data = "";
+
+
 
     fetch(url)
       .then(res => res.json())
       .then(res => {
         res.map(building => {
-          data += `<tr id="checkbox-row-${building.id}">
-                            <td class="center">
-                                <label class="pos-rel">
-                                    <input class="checkbox-delete c-id${building.id}" type="checkbox" class="ace">
-                                    
-                                </label>
-                            </td>
-                            <td>
-                                <a href="#">${building.name}</a>
-                            </td>
-                            <td>${building.address}</td>
-                            <td>${building.managerName}</td>
-                            <td>${building.managerPhone}</td>
-                            <td>${building.buildingArea}</td>
-                            <td>${building.rentCost}</td>
-                            <td>${building.getBuildingTypeArray}</td>
-                            <td>${building.rentArea}</td>
-                            <td>
-                                <div class="hidden-sm hidden-xs action-buttons">
-                                    <button id='btn_assign_code${building.id}' data-toggle="modal"
-                                        data-target="#modalStaff"
-                                        class="btn_assign ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
-                                            <i class="ace-icon glyphicon glyphicon-user"></i></span></button>
-                                    <button id='btn_update_code${building.id}' data-toggle="modal" data-target="#myModal"
-                                        class="btn_update ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
-                                            <i class="ace-icon fa fa-pencil bigger-130"></i></span></button>
-                                    <button id="btn_delete_code${building.id}"
-                                        class="btn_delete ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
-                                            <i class="ace-icon fa fa-trash-o bigger-130"></i></span></button>
-
-                                </div>
-
-                            </td>
-                        </tr>`
+          data +=  `<tr id="checkbox-row-${building.id}">
+          ${buildingToTableRowHTML(building)}
+          </tr>`
         })
         $('#data-building-list')[0].innerHTML = data;
 
@@ -65,7 +71,7 @@ $(document).ready(function () {
       prevText: "Previous",
       nextText: "Next",
       onPageClick: function (pageNumber) {
-        loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=10`);
+        loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
       }
     });
   }
@@ -181,7 +187,9 @@ $(document).ready(function () {
       }
     }).then(res => res.json())
       .then(res => {
-        console.log(res);
+        if(res=true){
+          $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
+        }
       });
 
   })
@@ -265,6 +273,14 @@ $(document).ready(function () {
         console.log(res);
         $('#buildingForm')[0].reset();
         $('#myModal').modal('hide');
+        if(method=='PUT'){
+          $(`#checkbox-row-${res.id}`).html(buildingToTableRowHTML(res));
+        }else{
+          const pageString = $('#pagination-container .active > span')[0].innerHTML;
+          const pageNumber = parseInt(pageString);
+          loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+          console.log(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+        }
       });
 
   });

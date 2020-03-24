@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import com.javaweb.Helper.MapToSqlSearch;
 import com.javaweb.Helper.ObjectToMap;
 import com.javaweb.builder.BuildingSearchBuilder;
-import com.javaweb.dto.BuildingDTO;
+import com.javaweb.builder.BuildingSearchBuilder;
 import com.javaweb.entity.BuildingEntity;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,33 +27,14 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 	private EntityManager em;
 
 
-	@Override
-	public List<BuildingEntity> findAll(Map<String, Object> properties, Pageable pageable, BuildingSearchBuilder builder) {
-		return null;
-	}
 
-	public List<BuildingEntity> findAll(BuildingDTO dto, Pageable pageable){
-
-		String specialSQL = getSpecialSQL(dto);
-		BuildingSearchBuilder builder = new BuildingSearchBuilder.Builder()
-				.setName(dto.getName())
-				.setBuildingArea(dto.getBuildingArea())
-				.setNumberOfBasement(dto.getNumberOfBasement())
-				.setDistrict(dto.getDistrict())
-				.setWard(dto.getWard())
-				.setStreet(dto.getStreet())
-				.build();
-		Map<String,Object> map = ObjectToMap.toMap(builder);
-		String where = MapToSqlSearch.toSql(map);
-
-		Query query = em.createQuery("select building from BuildingEntity building  where 1=1 " +
-				where + " " +
-				getSpecialSQL(dto));
-
+	public List<BuildingEntity> findAll(BuildingSearchBuilder builder, Pageable pageable){
+		String qlString = "select building from BuildingEntity building " + buildQuery(builder);
 		if(pageable==null){
 			pageable = PageRequest.of(1,10);
 		}
 
+		Query query = em.createQuery(qlString);
 		query.setFirstResult((pageable.getPageNumber()-1)*pageable.getPageSize());
 		query.setMaxResults(pageable.getPageSize());
 		List<BuildingEntity> results = (List<BuildingEntity>) query.getResultList();
@@ -63,58 +44,60 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 	}
 
 	@Override
-	public long count(BuildingDTO dto) {
-		String specialSQL = getSpecialSQL(dto);
-		BuildingSearchBuilder builder = new BuildingSearchBuilder.Builder()
-				.setName(dto.getName())
-				.setBuildingArea(dto.getBuildingArea())
-				.setNumberOfBasement(dto.getNumberOfBasement())
-				.setDistrict(dto.getDistrict())
-				.setWard(dto.getWard())
-				.setStreet(dto.getStreet())
-				.build();
-		Map<String,Object> map = ObjectToMap.toMap(builder);
-		String where = MapToSqlSearch.toSql(map);
-
-		Query query = em.createQuery("select count(building) from BuildingEntity building  where 1=1 " +
-				where + " " + specialSQL);
-		Long count = (Long) query.getSingleResult();
+	public long count(BuildingSearchBuilder builder) {
+		String qlString = "select count(building) from BuildingEntity building " + buildQuery(builder);
+		Long count = (Long) em.createQuery(qlString).getSingleResult();
 		return count.longValue();
 	}
 
-	private  String getSingleFieldSQL(BuildingDTO dto){
-		StringBuilder sql = new StringBuilder();
+	private String buildQuery(BuildingSearchBuilder builder){
+		String specialSQL = getSpecialQLString(builder);
+		BuildingSearchBuilder singleFieldBuilder = new BuildingSearchBuilder.Builder()
+				.setName(builder.getName())
+				.setBuildingArea(builder.getBuildingArea())
+				.setNumberOfBasement(builder.getNumberOfBasement())
+				.setDistrict(builder.getDistrict())
+				.setWard(builder.getWard())
+				.setStreet(builder.getStreet())
+				.build();
+		Map<String,Object> map = ObjectToMap.toMap(singleFieldBuilder);
+		String where = MapToSqlSearch.toSql(map);
 
-
-		return  sql.toString();
+		String qlString = "";
+		if(builder.getStaffId()!=null) qlString += " inner join building.staffList staff";
+		qlString +=  "  where 1=1 ";
+		if(!where.isEmpty() || !specialSQL.isEmpty()){
+			qlString = qlString+  "  where 1=1 " + where + " " + specialSQL;
+		}
+		if(builder.getStaffId()!=null) qlString = qlString + " AND staffid="+builder.getStaffId();
+		return qlString;
 	}
 
-
-	private String getSpecialSQL(BuildingDTO dto) {
+	private String getSpecialQLString(BuildingSearchBuilder builder) {
 		StringBuilder sql = new StringBuilder();
 		String prefix = "building.";
-		if(dto.getRentCostFrom()!=null) {
-			sql.append(" AND " + prefix + "rentCost >="+dto.getRentCostFrom());
+		if(builder.getRentCostFrom()!=null) {
+			sql.append(" AND " + prefix + "rentCost >="+builder.getRentCostFrom());
 		}
-		if(dto.getRentCostTo()!=null) {
-			sql.append(" AND " + prefix + "rentCost <="+dto.getRentCostTo());
+		if(builder.getRentCostTo()!=null) {
+			sql.append(" AND " + prefix + "rentCost <="+builder.getRentCostTo());
 		}
 		
-		if(dto.getRentAreaFrom()!=null || dto.getRentAreaTo()!=null) {
+			if(builder.getRentAreaFrom()!=null || builder.getRentAreaTo()!=null) {
 			sql.append(" AND EXISTS (SELECT ra FROM RentAreaEntity ra WHERE ra.building=" + prefix + "id");
 
-			if(dto.getRentAreaFrom()!=null){
-				sql.append(" AND ra.value >="+dto.getRentAreaFrom());
+			if(builder.getRentAreaFrom()!=null){
+				sql.append(" AND ra.value >="+builder.getRentAreaFrom());
 			}
-			if(dto.getRentAreaTo()!=null){
-				sql.append(" AND ra.value <="+dto.getRentAreaTo());
+			if(builder.getRentAreaTo()!=null){
+				sql.append(" AND ra.value <="+builder.getRentAreaTo());
 			}
 			sql.append(")");
 		}
-		if(dto.getBuildingType()!=null && dto.getBuildingType().length>0) {
+		if(builder.getBuildingType()!=null && builder.getBuildingType().length>0) {
 			
 			sql.append(" AND (");
-			String s = Arrays.stream(dto.getBuildingType())
+			String s = Arrays.stream(builder.getBuildingType())
 			.map(e->"type LIKE '%"+e+"%'").collect(Collectors.joining(" OR "));
 			sql.append(s+")");
 			

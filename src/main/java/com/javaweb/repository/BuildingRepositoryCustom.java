@@ -9,8 +9,6 @@ import com.javaweb.entity.BuildingEntity;
 import org.springframework.data.domain.Pageable;
 
 public interface BuildingRepositoryCustom {
-	List<BuildingEntity> findAll(Map<String,Object> properties,
-								 Pageable pageable, BuildingSearchBuilder builder);
-	List<BuildingEntity> findAll(BuildingDTO dto, Pageable pageabdtole);
-	public long count(BuildingDTO dto);
+	List<BuildingEntity> findAll(BuildingSearchBuilder builder, Pageable pageable);
+	public long count(BuildingSearchBuilder builder);
 }

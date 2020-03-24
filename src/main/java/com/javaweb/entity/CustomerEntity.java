@@ -1,6 +1,7 @@
 package com.javaweb.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ public class CustomerEntity extends AbstractEntity{
 	
 	@Column(name="id")
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name="name")
@@ -34,6 +36,35 @@ public class CustomerEntity extends AbstractEntity{
 	
 	@Column(name="note")
 	private String note;
+
+	@ManyToMany(fetch = FetchType.LAZY,cascade={CascadeType.ALL})
+	@JoinTable(
+			name = "staff_customer",
+			joinColumns = @JoinColumn(name = "customerid"),
+			inverseJoinColumns = @JoinColumn(name = "staffid"))
+	Set<UserEntity> staffList;
+
+	@OneToMany(mappedBy="customer",
+			fetch = FetchType.EAGER,
+			cascade = CascadeType.ALL,
+			orphanRemoval = true)
+	private Set<TransactionEntity> transactionList;
+
+	public void setTransactionList(Set<TransactionEntity> transactionList) {
+		this.transactionList = transactionList;
+	}
+
+	public Set<TransactionEntity> getTransactionList() {
+		return transactionList;
+	}
+
+	public Set<UserEntity> getStaffList() {
+		return staffList;
+	}
+
+	public void setStaffList(Set<UserEntity> staffList) {
+		this.staffList = staffList;
+	}
 
 	public Long getId() {
 		return id;

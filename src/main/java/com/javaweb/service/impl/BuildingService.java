@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import com.javaweb.builder.BuildingSearchBuilder;
 import com.javaweb.entity.RentAreaEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -23,8 +24,8 @@ public class BuildingService implements IBuildingService{
 
 	@Override
 	public List<BuildingDTO> findAll(BuildingDTO dto, Pageable pageable) {
-
-		List<BuildingEntity> results =   repository.findAll(dto,pageable);
+		BuildingSearchBuilder builder = DTOConverter.toModel(dto,BuildingSearchBuilder.Builder.class).build();
+		List<BuildingEntity> results =   repository.findAll(builder,pageable);
 		return results.stream()
 				.map(item-> {
 					BuildingDTO temp = (BuildingDTO)DTOConverter.toModel(item,BuildingDTO.class);
@@ -60,7 +61,7 @@ public class BuildingService implements IBuildingService{
 //		long id = repository.save(entity);
 //		String rentAreaArr[] = building.getRentArea().replaceAll("\\s+","").split(",");
 //		List<Integer> list = Arrays.stream(rentAreaArr).filter(e -> StringUtils.isNotBlank(e)).map(e -> Integer.parseInt(e)).collect(Collectors.toList());
-//			
+//
 //		RentAreaRepository rentAreaRepository = new RentAreaRepository();
 //		RentArea rentArea = new RentArea();
 //		rentArea.setBuildingId((int)id);
@@ -70,26 +71,26 @@ public class BuildingService implements IBuildingService{
 //			});
 //		return id;
 //	}
-//	
+//
 	public Long update(BuildingDTO building) {
 		BuildingEntity oldBuildingEntity = repository.findById(building.getId()).get();
 		BuildingEntity entity = DTOConverter.toModel(building, BuildingEntity.class);
 		entity.setType(building.getBuildingTypeString());
-		BuildingEntity result = repository.save(entity);
+		entity.setStaffList(oldBuildingEntity.getStaffList());
+		entity.setId(oldBuildingEntity.getId());
 
 		String[] s = building.getRentArea().replaceAll("\\s+", "").split(",");
 		Set<RentAreaEntity> rentAreaEntityList = new HashSet<>();
 		if(building.getRentArea()!=null && !building.getRentArea().isEmpty()) {
 			Arrays.stream(s).map(e -> Integer.parseInt(e)).forEach(e->{
 				RentAreaEntity rentAreaEntity = new RentAreaEntity(e);
-				rentAreaEntity.setBuilding(result);
+				rentAreaEntity.setBuilding(entity);
 				rentAreaEntityList.add(rentAreaEntity);
-
 			});
 		}
-		result.setRentAreaList(rentAreaEntityList);
+		entity.setRentAreaList(rentAreaEntityList);
 		repository.save(entity);
-		return result.getId();
+		return entity.getId();
 	}
 
 	@Override
@@ -117,7 +118,8 @@ public class BuildingService implements IBuildingService{
 
 	@Override
 	public long count(BuildingDTO dto) {
-		return repository.count(dto);
+		BuildingSearchBuilder builder = DTOConverter.toModel(dto,BuildingSearchBuilder.Builder.class).build();
+		return repository.count(builder);
 	}
 
 	@Override
@@ -127,19 +129,17 @@ public class BuildingService implements IBuildingService{
 		BuildingEntity entity = DTOConverter.toModel(building, BuildingEntity.class);
 		entity.setType(building.getBuildingTypeString());
 		BuildingEntity result = repository.save(entity);
-
 		String[] s = building.getRentArea().replaceAll("\\s+", "").split(",");
 		Set<RentAreaEntity> rentAreaEntityList = new HashSet<>();
+		result.setRentAreaList(rentAreaEntityList);
 		if(building.getRentArea()!=null && !building.getRentArea().isEmpty()) {
 			Arrays.stream(s).map(e -> Integer.parseInt(e)).forEach(e->{
 				RentAreaEntity rentAreaEntity = new RentAreaEntity(e);
 				rentAreaEntity.setBuilding(result);
-				rentAreaEntityList.add(rentAreaEntity);
-
+				result.getRentAreaList().add(rentAreaEntity);
 			});
 		}
-		result.setRentAreaList(rentAreaEntityList);
-		repository.save(entity);
+		BuildingEntity t = repository.save(result);
 		return result.getId();
 	}
 

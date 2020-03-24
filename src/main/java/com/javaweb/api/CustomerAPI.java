@@ -1,67 +1,82 @@
 package com.javaweb.api;
 
-import java.io.IOException;
+import com.javaweb.dto.CustomerDTO;
+import com.javaweb.service.ICustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
+
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.javaweb.dto.CustomerDTO;
-import com.javaweb.paging.impl.PageRequest;
-import com.javaweb.service.impl.CustomerService;
-import com.javaweb.utils.HttpUtil;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-
-@WebServlet(urlPatterns= {"/api-server/customer"})
-public class CustomerAPI extends HttpServlet{
-
+@RestController
+@RequestMapping("/api-server/customer")
+public class CustomerAPI {
+	
+	@Autowired
+	ICustomerService service;
+	
 	@GetMapping("/list")
-	public List<CustomerDTO> findAll(@ModelAttribute CustomerDTO customerRequest,@ModelAttribute PageRequest pageRequest){
-		List<CustomerDTO> results =  new CustomerService().findAll(customerRequest, pageRequest);
-		return  results;
+	public List<CustomerDTO> list(@ModelAttribute CustomerDTO customerRequest){
+		Pageable pageable = null;
+		if(customerRequest.getPage()!=null && customerRequest.getSize()!=null)
+			pageable = PageRequest.of(customerRequest.getPage().intValue(),customerRequest.getSize().intValue());
+
+		List<CustomerDTO> results = service.findAll(customerRequest,pageable);
+		return results;
+		
 	}
 
-	@PostMapping
-	protected CustomerDTO newCustomer(@ModelAttribute CustomerDTO customer){
+	@GetMapping("/count")
+	public long count(@ModelAttribute CustomerDTO customerRequest){
+		return service.count(customerRequest);
+	}
+
+
+	@GetMapping
+	public CustomerDTO findById(@RequestParam Long id){
+		CustomerDTO result = service.findById(id);
+		return result;
+
+	}
+	
+	@RequestMapping(value = "",method = RequestMethod.POST,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+	public CustomerDTO newCustomer(@RequestBody CustomerDTO customer) {
 		customer.setCreatedBy("admin");
 		customer.setModifiedBy("admin");
 		customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 		
-		CustomerService service = new CustomerService();
 		Long id = service.save(customer);
-		CustomerDTO get = service.findById(id);
-		return get;
-	}
-
-	@PutMapping
-	public CustomerDTO update(@ModelAttribute CustomerDTO customer){
-		customer.setModifiedBy("admin");
-		customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 		
-		CustomerService service = new CustomerService();
-		Long id = service.update(customer);
-		CustomerDTO get = service.findById(id);
-		return get;
+		CustomerDTO result = service.findById(id);
+		return result;
 	}
 
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		CustomerDTO customer = HttpUtil.of(req.getReader()).toModel(CustomerDTO.class);
-		CustomerService service = new CustomerService();
-		long[] ids = customer.getIds();
-		if(ids!=null && ids.length>0) {
-			service.delete(customer.getIds());
-		}
+	@RequestMapping(value = "",method = RequestMethod.PUT,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+	protected CustomerDTO updateCustomer(@RequestBody CustomerDTO customer) {
+
+		customer.setCreatedBy("admin");
+		customer.setModifiedBy("admin");
+		customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+
+		service.update(customer);
+		CustomerDTO resp = service.findById(customer.getId());
+		return resp;
 	}
 
-	
-	
+
+	@RequestMapping(value = "",method = RequestMethod.DELETE,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+	protected boolean deleteCustomer(@RequestBody Map<String, Object> json) {
+			List<Integer> tempIds = (List<Integer>) json.get("ids");
+		List<Long> ids=  tempIds.stream().map(e -> (Long)e.longValue()).collect(Collectors.toList());
+		return service.delete(ids);
+	}
+
 }

@@ -6,6 +6,15 @@ import javax.persistence.Id;
 public class RentAreaDTO extends AbstractDTO{
     private Long id;
     private Integer value;
+    private Long building;
+
+    public Long getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Long building) {
+        this.building = building;
+    }
 
     public Long getId() {
         return id;

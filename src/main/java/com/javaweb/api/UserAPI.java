@@ -61,6 +61,25 @@ public class UserAPI{
 		return results;
 	}
 
+
+	@RequestMapping(value = {"/assignment-customer"},method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+	protected boolean assignCustomer(@RequestBody Map<String, Object> json){
+		Integer customerId = (Integer) json.get("customerId");
+		List<Integer> staffIdList = (List<Integer>) json.get("staffId");
+		List<Long> staffId = staffIdList.stream().map(e -> (Long)e.longValue()).collect(Collectors.toList());
+		Long customerIdAsLong = (Long) customerId.longValue();
+		return service.assignCustomer(staffId, customerIdAsLong);
+	}
+
+	@GetMapping("/assignment-customer")
+	protected List<Object> findAllAssignCustomer(@RequestParam Long id){
+
+		List<Tuple> data =  service.findAssignmentByCustomerId(id);
+		List<Object> results = data.parallelStream().map(e -> e.toArray()).collect(Collectors.toList());
+		return results;
+	}
+
+
 	@PostMapping
 	protected UserDTO newuser(@ModelAttribute UserDTO user){
 		user.setCreatedBy("admin");
