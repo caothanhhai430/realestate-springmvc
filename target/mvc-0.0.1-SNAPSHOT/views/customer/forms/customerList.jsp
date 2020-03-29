@@ -48,6 +48,7 @@
                                 <input type="checkbox" class="ace">
                                 <span class="lbl"></span>
                             </label>
+                        </th>
                         <th class="sorting" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                             aria-label="">Tên</th>
 
@@ -64,8 +65,9 @@
                             aria-label="">Ngày nhập</th>
                         <th class="sorting" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                             aria-label="">Tình trạng</th>
-                        <th class="sorting" style="width: 165px;" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
+                        <th class="sorting" style="width: 210px;" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                             aria-label="">Thao tác</th>
+                    </tr>
                 </thead>
 
                 <tbody id="data-customer-list">

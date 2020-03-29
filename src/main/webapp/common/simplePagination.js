@@ -61,7 +61,7 @@
 
 			return this;
 		},
-
+		
 		selectPage: function(page) {
 			methods._selectPage.call(this, page - 1);
 			return this;

@@ -24,14 +24,15 @@ public class TransactionRepositoryCustomImpl implements TransactionRepositoryCus
 
 
 	public List<TransactionEntity> findAll(long customerId, Pageable pageable){
-		String qlString = "select transaction from TransactionEntity transaction where transaction.customer="+customerId;
-		if(pageable==null){
-			pageable = PageRequest.of(1,10);
-		}
+		String qlString = "select transaction from TransactionEntity transaction where transaction.customer=" +
+				customerId + " order by transaction.createdDate desc ";
 
 		Query query = em.createQuery(qlString);
-		query.setFirstResult((pageable.getPageNumber()-1)*pageable.getPageSize());
-		query.setMaxResults(pageable.getPageSize());
+
+		if(pageable!=null){
+			query.setFirstResult((pageable.getPageNumber()-1)*pageable.getPageSize());
+			query.setMaxResults(pageable.getPageSize());
+		}
 		List<TransactionEntity> results = (List<TransactionEntity>) query.getResultList();
 
 		return results;

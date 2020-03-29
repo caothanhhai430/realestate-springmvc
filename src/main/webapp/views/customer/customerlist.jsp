@@ -30,6 +30,8 @@
 
 			<%@ include file = "./forms/customerModal.jsp"%>
 
+			<%@ include file = "./forms/transactionModal.jsp"%>
+
 			<%@ include file = "./forms/customerList.jsp"%>
 
 
@@ -44,7 +46,7 @@
 		<script src='<c:url value="/common/template/assets/js/ace-elements.min.js"/>'></script>
 		<script src='<c:url value="/common/template/assets/js/ace.min.js"/>'></script>
 
-    <script type="text/javascript" src="../../common//simplePagination.js"></script>
+    <script type="text/javascript" src="../../common/simplePagination.js"></script>
 	<script src="../../common/customer_script.js"></script>
 
 

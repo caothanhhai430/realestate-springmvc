@@ -27,9 +27,15 @@ $(document).ready(function () {
                 data-target="#modalStaff"
                 class="btn_assign ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
                     <i class="ace-icon glyphicon glyphicon-user"></i></span></button>
-            <button id='btn_update_code${customer.id}' data-toggle="modal" data-target="#myModal"
+            
+                    <button id='btn_update_code${customer.id}' data-toggle="modal" data-target="#myModal"
                 class="btn_update ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
                     <i class="ace-icon fa fa-pencil bigger-130"></i></span></button>
+            
+                    <button id='btn_care_code${customer.id}' data-toggle="modal" data-target="#transactionModal"
+            class="btn_care ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
+                <i class="ace-icon 	fa fa-group bigger-130"></i></span></button>
+        
             <button id="btn_delete_code${customer.id}"
                 class="btn_delete ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
                     <i class="ace-icon fa fa-trash-o bigger-130"></i></span></button>
@@ -37,6 +43,29 @@ $(document).ready(function () {
         </div>
 
     </td>`
+  }
+
+
+  function timeConverter(UNIX_timestamp){
+    var a = new Date(UNIX_timestamp);
+    // var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = a.getMonth();
+    var date = a.getDate();
+    var hour = a.getHours();
+    var min = a.getMinutes();
+    var sec = a.getSeconds();
+    var time =  hour + ':' + min + ':' + sec  + '       ' + date + '-' + month + '-' + year;
+    return time;
+  }
+
+
+  const transactionToTableRowHTML = (obj)=>{
+    return `<tr>
+      <td>${timeConverter(obj.createdDate)}</td>
+      <td style="max-width: 300px;">${obj.note}</td>
+      <td>${obj.createdBy}</td>
+      </tr>`
   }
 
   const loadData = (url) => {
@@ -58,7 +87,6 @@ $(document).ready(function () {
       }
       )
   }
-
 
   const customerPagination = (numItems, itemsOnPage, currentPage) => {
 
@@ -108,7 +136,7 @@ $(document).ready(function () {
     let customerId = id.substr(id.indexOf("_code") + 5);
     $('#assign_customerId').val(customerId);
     var data = "";
-    fetch('http://localhost:8080/api-server/staff/assignment-customer?id=' + customerId)
+    fetch(`${API_URL}/staff/assignment-customer?id=${customerId}`)
       .then(res => res.json())
       .then(res => {
         console.log(res);
@@ -129,7 +157,7 @@ $(document).ready(function () {
     let id = $(this).attr('id');
     let customerId = id.substr(id.indexOf("_code") + 5);
     $('#modal_customerId').val(customerId);
-    fetch('http://localhost:8080/api-server/customer?id=' + customerId)
+    fetch(`${API_URL}/customer?id=${customerId}`)
       .then(res => res.json())
       .then(res => {
         $('#customerForm')[0].reset();
@@ -138,6 +166,91 @@ $(document).ready(function () {
       .catch(e => {
         console.log(e);
       })
+  })
+
+
+  $("#btn-addCareNote").click(()=> {
+    const note = $('#customerCareNote').val();
+    const customerId = $('#id-customer-trans').val();
+    console.log(customerId);
+    const data = {
+      note,customerId,type:0
+    }
+    console.log(JSON.stringify(data));
+    fetch(`${API_URL}/transaction`,{
+      method:'POST',
+      body:JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        const tbody = $('#tbody-customerCare')[0];
+        tbody.innerHTML = transactionToTableRowHTML(res) + tbody.innerHTML;
+        $('#customerCareNote').val('')
+      })
+      .catch(e => {
+        console.log(e);
+      })
+  })
+
+
+  $("#btn-addTourNote").click(()=> {
+    const note = $('#customerTourNote').val();
+    const customerId = $('#id-customer-trans').val();
+    console.log(customerId);
+    const data = {
+      note,customerId,type:1
+    }
+    console.log(JSON.stringify(data));
+    fetch(`${API_URL}/transaction`,{
+      method:'POST',
+      body:JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        const tbody = $('#tbody-customerTour')[0];
+        tbody.innerHTML = transactionToTableRowHTML(res) + tbody.innerHTML;
+        $('#customerTourNote').val('')
+      })
+      .catch(e => {
+        console.log(e);
+      })
+  })
+
+
+
+
+  $("#dynamic-table").on("click", "button[id^='btn_care']", function () {
+
+    let id = $(this).attr('id');
+    let customerId = id.substr(id.indexOf("_code") + 5);
+    $('#id-customer-trans').val(customerId);
+    const customerCareTable = $('#customerCare > tbody')[0];
+    const customerTourTable = $('#customerTour > tbody')[0];
+    let customerCareData = "";
+    let customerTourData = "";
+    fetch(`${API_URL}/transaction/list?customerId=${customerId}`)
+      .then(res => res.json())
+      .then(res => {
+          res.map(e => {
+            const row = transactionToTableRowHTML(e);
+            if(e.type==0){
+              customerCareData += row;
+            }else if(e.type==1) customerTourData +=row;
+          })
+          customerCareTable.innerHTML = customerCareData;
+          customerTourTable.innerHTML = customerTourData;
+        
+      })
+      .catch(e => {
+        console.log(e);
+      })
+
   })
 
 
@@ -168,6 +281,7 @@ $(document).ready(function () {
   }
 
 
+
   $("#delete-selected-customer").click(() => {
     var rows = $("input[class^='checkbox-delete']:checked");
     let ids = [];
@@ -177,8 +291,7 @@ $(document).ready(function () {
       ids.push(parseInt(id));
     }
     let data = { 'ids': ids }
-    console.log(JSON.stringify(data));
-    fetch('http://localhost:8080/api-server/customer', {
+    fetch(`${API_URL}/customer`, {
       method: 'DELETE',
       body: JSON.stringify(data),
       headers: {
@@ -198,7 +311,7 @@ $(document).ready(function () {
     let customerId = id.substr(id.indexOf("_code") + 5);
     let ids = [parseInt(customerId)];
     let data = { 'ids': ids }
-    fetch('http://localhost:8080/api-server/customer', {
+    fetch(`${API_URL}/customer`, {
       method: 'DELETE',
       body: JSON.stringify(data),
       headers: {
@@ -226,9 +339,8 @@ $(document).ready(function () {
     });
     customerId = (parseInt($('#assign_customerId').attr('value')));
     let data = { staffId, customerId };
-    console.log(JSON.stringify(data));
-
-    fetch('http://localhost:8080/api-server/staff/assignment-customer', {
+    
+    fetch(`${API_URL}/staff/assignment-customer`, {
       method: 'POST', // or 'PUT'
       body: JSON.stringify(data), // data can be `string` or {object}!
       headers: {
@@ -260,7 +372,7 @@ $(document).ready(function () {
     console.log(method);
     data['customerType'] = type;
     
-    fetch('http://localhost:8080/api-server/customer', {
+    fetch(`${API_URL}/customer`, {
       method: method,
       body: JSON.stringify(data), // data can be `string` or {object}!
       headers: {
