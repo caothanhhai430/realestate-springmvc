@@ -1,31 +1,17 @@
 package com.javaweb.api;
 
-import java.io.IOException;
+import com.javaweb.dto.UserDTO;
+import com.javaweb.paging.impl.PageRequest;
+import com.javaweb.service.IUserService;
+import com.javaweb.service.impl.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.Tuple;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.persistence.Tuple;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.javaweb.dto.UserDTO;
-import com.javaweb.service.IUserService;
-import com.javaweb.service.impl.UserService;
-import com.javaweb.service.impl.UserService;
-import com.javaweb.utils.HttpUtil;
-import org.codehaus.jackson.map.ObjectMapper;
-
-import com.javaweb.dto.UserDTO;
-import com.javaweb.paging.impl.PageRequest;
-import com.javaweb.utils.FormUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -82,10 +68,10 @@ public class UserAPI{
 
 	@PostMapping
 	protected UserDTO newuser(@ModelAttribute UserDTO user){
-		user.setCreatedBy("admin");
-		user.setModifiedBy("admin");
-		user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		user.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+//		user.setCreatedBy("admin");
+//		user.setModifiedBy("admin");
+//		user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//		user.setModifiedDate(new Timestamp(System.currentTimeMillis()));
 
 		UserService service = new UserService();
 		Long id = service.save(user);

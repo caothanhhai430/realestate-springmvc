@@ -47,11 +47,11 @@ public class CustomerAPI {
 	
 	@RequestMapping(value = "",method = RequestMethod.POST,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	public CustomerDTO newCustomer(@RequestBody CustomerDTO customer) {
-		customer.setCreatedBy("admin");
-		customer.setModifiedBy("admin");
-		customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-		
+//		customer.setCreatedBy("admin");
+//		customer.setModifiedBy("admin");
+//		customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//		customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+//
 		Long id = service.save(customer);
 		
 		CustomerDTO result = service.findById(id);

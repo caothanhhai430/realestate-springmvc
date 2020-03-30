@@ -5,7 +5,7 @@ $(document).ready(function () {
 
 
 
-  const buildingToTableRowHTML = (building)=>{
+  const buildingToTableRowHTML = (building) => {
     return `<td class="center">
         <label class="pos-rel">
             <input class="checkbox-delete c-id${building.id}" type="checkbox" class="ace">
@@ -50,7 +50,7 @@ $(document).ready(function () {
       .then(res => res.json())
       .then(res => {
         res.map(building => {
-          data +=  `<tr id="checkbox-row-${building.id}">
+          data += `<tr id="checkbox-row-${building.id}">
           ${buildingToTableRowHTML(building)}
           </tr>`
         })
@@ -76,28 +76,28 @@ $(document).ready(function () {
     });
   }
 
-  const fetchFirstPagination= (url)=>{
+  const fetchFirstPagination = (url) => {
     console.log(url);
-    fetch(url).then(res=> res.json()).then(count=>{
+    fetch(url).then(res => res.json()).then(count => {
       console.log(count);
-      buildingPagination(count,ITEMS_ON_PAGE,1);
+      buildingPagination(count, ITEMS_ON_PAGE, 1);
     })
-    .catch(e=>{
-      console.log('err'+e);
-    })
+      .catch(e => {
+        console.log('err' + e);
+      })
   }
 
 
 
-  const fetchData = async()=>{
-    if(!!currentRequestForm) currentRequestForm = $('#building_form').serialize();
+  const fetchData = async () => {
+    if (!!currentRequestForm) currentRequestForm = $('#building_form').serialize();
     loadData(`${API_URL}/building/list?${currentRequestForm}`);
     fetchFirstPagination(`${API_URL}/building/count?${currentRequestForm}`);
   }
 
   fetchData();
 
-  $('#btn_search').click(()=>{
+  $('#btn_search').click(() => {
     currentRequestForm = $('#building_form').serialize();
     fetchData();
   })
@@ -114,7 +114,7 @@ $(document).ready(function () {
       .then(res => res.json())
       .then(res => {
         res.map(e => {
-          data += '<tr> <td><input type="hidden" id="assignstaff_code' + e[0] + '"> <input type="checkbox"' + e[2] + ' ></td> <td>' + e[1] + '</td> </tr>';
+          data += '<tr> <td><input type="hidden" id="assignstaff_code' + e[0] + '"> <input type="checkbox"' + e[2] + ' ></td> <td>' + (e[1]==null? '':e[1]) + '</td> </tr>';
         })
         tbody.innerHTML = data;
       }
@@ -179,18 +179,36 @@ $(document).ready(function () {
     }
     let data = { 'ids': ids }
     console.log(JSON.stringify(data));
-    fetch('http://localhost:8080/api-server/building', {
-      method: 'DELETE',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => res.json())
-      .then(res => {
-        if(res=true){
-          $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
+    $.confirm({
+      title: false,
+      content: 'Bạn có muốn thực hiện thao tác xóa!',
+      buttons: {
+        confirm: {
+          text: 'Đồng ý',
+          btnClass: 'btn-danger',
+          action: () => {
+            fetch('http://localhost:8080/api-server/building', {
+              method: 'DELETE',
+              body: JSON.stringify(data),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => res.json())
+              .then(res => {
+                if (res = true) {
+                  $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
+                  $.alert('Đã xóa thành công');
+                }
+              });
+          }
+
+        },
+        cancel: {
+          text: 'Hủy'
         }
-      });
+      }
+    });
+
 
   })
   $("#dynamic-table").on("click", "button[id^='btn_delete']", function () {
@@ -199,17 +217,34 @@ $(document).ready(function () {
     let buildingId = id.substr(id.indexOf("_code") + 5);
     let ids = [parseInt(buildingId)];
     let data = { 'ids': ids }
-    fetch('http://localhost:8080/api-server/building', {
-      method: 'DELETE',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
+    $.confirm({
+      title: false,
+      content: 'Bạn có muốn thực hiện thao tác xóa!',
+      buttons: {
+        confirm: {
+          text: 'Đồng ý',
+          btnClass: 'btn-danger',
+          action: () => {
+            fetch('http://localhost:8080/api-server/building', {
+              method: 'DELETE',
+              body: JSON.stringify(data),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => res.json())
+              .then(res => {
+                if (res = true) {
+                  $(this).closest("tr").remove();
+                  $.alert('Đã xóa thành công');
+                }
+              });
+          }
+        },
+        cancel: {
+          text: 'Hủy'
+        }
       }
-    }).then(res => res.json())
-      .then(res => {
-        $(this).closest("tr").remove();
-      });
-
+    });
   });
 
 
@@ -229,64 +264,91 @@ $(document).ready(function () {
     let data = { staffId, buildingId };
     console.log(JSON.stringify(data));
 
-    fetch('http://localhost:8080/api-server/staff/assignment', {
-      method: 'POST', // or 'PUT'
-      body: JSON.stringify(data), // data can be `string` or {object}!
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => res.json())
-      .then(res => {
-        console.log(res);
-      });
-
-  })
-
-  $("#submit_save").click(function () {
-    var x = $("#buildingForm").serializeArray();
-    var type = [];
-    var data = {};
-    $.each(x, function (i, field) {
-      data[field.name] = field.value;
-      if (field.name == 'buildingType') {
-        type.push(field.value);
+    $.confirm({
+      title: false,
+      content: 'Bạn có muốn thực hiện các thay đổi!',
+      buttons: {
+        confirm: {
+          text: 'Đồng ý',
+          btnClass: 'btn-danger',
+          action: () => {
+            fetch('http://localhost:8080/api-server/staff/assignment', {
+              method: 'POST', // or 'PUT'
+              body: JSON.stringify(data), // data can be `string` or {object}!
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => res.json())
+              .then(res => {
+                $.alert('Thực hiện thành công');
+              });
+          }
+        },
+        cancel: {
+          text: 'Hủy'
+        }
       }
     });
-    let method = 'POST';
-    if ((!!$('#modal_buildingId')[0].value)) {
-      method = 'PUT';
-    }
+  })
 
-    console.log($('#modal_buildingId')[0].value);
-    console.log(method);
-    data['buildingType'] = type;
-    console.log(JSON.stringify(data));
-    console.log('new');
-    fetch('http://localhost:8080/api-server/building', {
-      method: method,
-      body: JSON.stringify(data), // data can be `string` or {object}!
-      headers: {
-        'Content-Type': 'application/json'
+    $("#submit_save").click(function () {
+      var x = $("#buildingForm").serializeArray();
+      var type = [];
+      var data = {};
+      $.each(x, function (i, field) {
+        data[field.name] = field.value;
+        if (field.name == 'buildingType') {
+          type.push(field.value);
+        }
+      });
+      let method = 'POST';
+      if ((!!$('#modal_buildingId')[0].value)) {
+        method = 'PUT';
       }
-    }).then(res => res.json())
-      .then(res => {
-        console.log(res);
-        $('#buildingForm')[0].reset();
-        $('#myModal').modal('hide');
-        if(method=='PUT'){
-          $(`#checkbox-row-${res.id}`).html(buildingToTableRowHTML(res));
-        }else{
-          const pageString = $('#pagination-container .active > span')[0].innerHTML;
-          const pageNumber = parseInt(pageString);
-          loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
-          console.log(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+
+      console.log($('#modal_buildingId')[0].value);
+      console.log(method);
+      data['buildingType'] = type;
+      console.log(JSON.stringify(data));
+      console.log('new');
+
+      $.confirm({
+        title: false,
+        content: 'Bạn có muốn thực hiện các thay đổi!',
+        buttons: {
+          confirm: {
+            text: 'Đồng ý',
+            btnClass: 'btn-danger',
+            action: () => {
+              fetch('http://localhost:8080/api-server/building', {
+                method: method,
+                body: JSON.stringify(data), // data can be `string` or {object}!
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              }).then(res => res.json())
+                .then(res => {
+                  console.log(res);
+                  $('#buildingForm')[0].reset();
+                  $('#myModal').modal('hide');
+                  if (method == 'PUT') {
+                    $(`#checkbox-row-${res.id}`).html(buildingToTableRowHTML(res));
+                  } else {
+                    const pageString = $('#pagination-container .active > span')[0].innerHTML;
+                    const pageNumber = parseInt(pageString);
+                    loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+                    console.log(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+                    $.alert('Thực hiện thành công');
+                  }
+                });
+            },
+          },
+          cancel: {
+            text: 'Hủy'
+          }
         }
       });
 
-  });
+    });
+  })
 
-
-
-
-
-});

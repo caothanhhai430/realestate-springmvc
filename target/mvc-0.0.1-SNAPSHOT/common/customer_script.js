@@ -5,7 +5,7 @@ $(document).ready(function () {
 
 
 
-  const customerToTableRowHTML = (customer)=>{
+  const customerToTableRowHTML = (customer) => {
     return `<td class="center">
         <label class="pos-rel">
             <input class="checkbox-delete c-id${customer.id}" type="checkbox" class="ace">
@@ -46,7 +46,7 @@ $(document).ready(function () {
   }
 
 
-  function timeConverter(UNIX_timestamp){
+  function timeConverter(UNIX_timestamp) {
     var a = new Date(UNIX_timestamp);
     // var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var year = a.getFullYear();
@@ -55,12 +55,12 @@ $(document).ready(function () {
     var hour = a.getHours();
     var min = a.getMinutes();
     var sec = a.getSeconds();
-    var time =  hour + ':' + min + ':' + sec  + '       ' + date + '-' + month + '-' + year;
+    var time = hour + ':' + min + ':' + sec + '       ' + date + '-' + month + '-' + year;
     return time;
   }
 
 
-  const transactionToTableRowHTML = (obj)=>{
+  const transactionToTableRowHTML = (obj) => {
     return `<tr>
       <td>${timeConverter(obj.createdDate)}</td>
       <td style="max-width: 300px;">${obj.note}</td>
@@ -78,7 +78,7 @@ $(document).ready(function () {
       .then(res => res.json())
       .then(res => {
         res.map(customer => {
-          data +=  `<tr id="checkbox-row-${customer.id}">
+          data += `<tr id="checkbox-row-${customer.id}">
           ${customerToTableRowHTML(customer)}
           </tr>`
         })
@@ -103,27 +103,27 @@ $(document).ready(function () {
     });
   }
 
-  const fetchFirstPagination= (url)=>{
+  const fetchFirstPagination = (url) => {
     console.log(url);
-    fetch(url).then(res=> res.json()).then(count=>{
-      customerPagination(count,ITEMS_ON_PAGE,1);
+    fetch(url).then(res => res.json()).then(count => {
+      customerPagination(count, ITEMS_ON_PAGE, 1);
     })
-    .catch(e=>{
-      console.log('err'+e);
-    })
+      .catch(e => {
+        console.log('err' + e);
+      })
   }
 
 
 
-  const fetchData = async()=>{
-    if(!!currentRequestForm) currentRequestForm = $('#customer_form').serialize();
+  const fetchData = async () => {
+    if (!!currentRequestForm) currentRequestForm = $('#customer_form').serialize();
     loadData(`${API_URL}/customer/list?${currentRequestForm}`);
     fetchFirstPagination(`${API_URL}/customer/count?${currentRequestForm}`);
   }
 
   fetchData();
 
-  $('#btn_search').click(()=>{
+  $('#btn_search').click(() => {
     currentRequestForm = $('#customer_form').serialize();
     fetchData();
   })
@@ -169,60 +169,109 @@ $(document).ready(function () {
   })
 
 
-  $("#btn-addCareNote").click(()=> {
+  $("#btn-addCareNote").click(() => {
     const note = $('#customerCareNote').val();
     const customerId = $('#id-customer-trans').val();
     console.log(customerId);
-    const data = {
-      note,customerId,type:0
-    }
-    console.log(JSON.stringify(data));
-    fetch(`${API_URL}/transaction`,{
-      method:'POST',
-      body:JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
+
+    $.confirm({
+      title: 'Thêm ghi chú',
+      boxWidth:'600px',
+      useBootstrap:false,
+      content: '' +
+        '<form action=""  class="formName">' +
+        '<div class="form-group">' +
+        '<textarea type="text" style="height:150px;" placeholder="Nhập ghi chú" class="cname form-control" required />' +
+        '</div>' +
+        '</form>',
+      buttons: {
+        formSubmit: {
+          text: 'Thêm',
+          btnClass: 'btn-success',
+          action: function () {
+            let note = this.$content.find('.cname').val();
+            if (!!name) {
+              $.alert('');
+              return false;
+            }
+            const data = {
+              note, customerId, type: 0
+            }
+
+            fetch(`${API_URL}/transaction`, {
+              method: 'POST',
+              body: JSON.stringify(data),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => res.json())
+              .then(res => {
+                const tbody = $('#tbody-customerCare')[0];
+                tbody.innerHTML = transactionToTableRowHTML(res) + tbody.innerHTML;
+                $.alert('Thao tác thành công');
+              })
+              .catch(e => {
+                console.log(e);
+              })
+          }
+        },
+        cancel: {
+          text: 'Hủy'
+        },
+      },
+      onContentReady: function () {
+        // bind to events
+        var jc = this;
+        this.$content.find('form').on('submit', function (e) {
+          // if the user submits the form by pressing enter in the field.
+          e.preventDefault();
+          jc.$$formSubmit.trigger('click'); // reference the button and click it
+        });
       }
-    })
-      .then(res => res.json())
-      .then(res => {
-        const tbody = $('#tbody-customerCare')[0];
-        tbody.innerHTML = transactionToTableRowHTML(res) + tbody.innerHTML;
-        $('#customerCareNote').val('')
-      })
-      .catch(e => {
-        console.log(e);
-      })
+    });
+
   })
 
 
-  $("#btn-addTourNote").click(()=> {
+  $("#btn-addTourNote").click(() => {
     const note = $('#customerTourNote').val();
     const customerId = $('#id-customer-trans').val();
     console.log(customerId);
     const data = {
-      note,customerId,type:1
+      note, customerId, type: 1
     }
     console.log(JSON.stringify(data));
-    fetch(`${API_URL}/transaction`,{
-      method:'POST',
-      body:JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
+    $.confirm({
+      title: false,
+      content: 'Bạn có muốn thực hiện các thay đổi!',
+      buttons: {
+        confirm: {
+          text: 'Đồng ý',
+          btnClass: 'btn-danger',
+          action: () => {
+            fetch(`${API_URL}/transaction`, {
+              method: 'POST',
+              body: JSON.stringify(data),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => res.json())
+              .then(res => {
+                const tbody = $('#tbody-customerTour')[0];
+                tbody.innerHTML = transactionToTableRowHTML(res) + tbody.innerHTML;
+                $('#customerTourNote').val('')
+              })
+              .catch(e => {
+                console.log(e);
+              })
+          }
+        },
+        cancel: {
+          text: 'Hủy'
+        }
       }
-    })
-      .then(res => res.json())
-      .then(res => {
-        const tbody = $('#tbody-customerTour')[0];
-        tbody.innerHTML = transactionToTableRowHTML(res) + tbody.innerHTML;
-        $('#customerTourNote').val('')
-      })
-      .catch(e => {
-        console.log(e);
-      })
+    });
   })
-
-
 
 
   $("#dynamic-table").on("click", "button[id^='btn_care']", function () {
@@ -237,15 +286,15 @@ $(document).ready(function () {
     fetch(`${API_URL}/transaction/list?customerId=${customerId}`)
       .then(res => res.json())
       .then(res => {
-          res.map(e => {
-            const row = transactionToTableRowHTML(e);
-            if(e.type==0){
-              customerCareData += row;
-            }else if(e.type==1) customerTourData +=row;
-          })
-          customerCareTable.innerHTML = customerCareData;
-          customerTourTable.innerHTML = customerTourData;
-        
+        res.map(e => {
+          const row = transactionToTableRowHTML(e);
+          if (e.type == 0) {
+            customerCareData += row;
+          } else if (e.type == 1) customerTourData += row;
+        })
+        customerCareTable.innerHTML = customerCareData;
+        customerTourTable.innerHTML = customerTourData;
+
       })
       .catch(e => {
         console.log(e);
@@ -291,18 +340,35 @@ $(document).ready(function () {
       ids.push(parseInt(id));
     }
     let data = { 'ids': ids }
-    fetch(`${API_URL}/customer`, {
-      method: 'DELETE',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => res.json())
-      .then(res => {
-        if(res=true){
-          $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
+    $.confirm({
+      title: false,
+      content: 'Bạn có muốn thực hiện thao tác xóa!',
+      buttons: {
+        confirm: {
+          text: 'Đồng ý',
+          btnClass: 'btn-danger',
+          action: () => {
+            fetch(`${API_URL}/customer`, {
+              method: 'DELETE',
+              body: JSON.stringify(data),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => res.json())
+              .then(res => {
+                if (res = true) {
+                  $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
+                  $.alert('Đã xóa thành công');
+                }
+              });
+          }
+
+        },
+        cancel: {
+          text: 'Hủy'
         }
-      });
+      }
+    });
 
   })
   $("#dynamic-table").on("click", "button[id^='btn_delete']", function () {
@@ -311,17 +377,35 @@ $(document).ready(function () {
     let customerId = id.substr(id.indexOf("_code") + 5);
     let ids = [parseInt(customerId)];
     let data = { 'ids': ids }
-    fetch(`${API_URL}/customer`, {
-      method: 'DELETE',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => res.json())
-      .then(res => {
-        $(this).closest("tr").remove();
-      });
+    $.confirm({
+      title: false,
+      content: 'Bạn có muốn thực hiện thao tác xóa!',
+      buttons: {
+        confirm: {
+          text: 'Đồng ý',
+          btnClass: 'btn-danger',
+          action: () => {
+            fetch(`${API_URL}/customer`, {
+              method: 'DELETE',
+              body: JSON.stringify(data),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => res.json())
+              .then(res => {
+                if (res = true) {
+                  $(this).closest("tr").remove();
+                  $.alert('Đã xóa thành công');
+                }
+              });
+          }
 
+        },
+        cancel: {
+          text: 'Hủy'
+        }
+      }
+    });
   });
 
 
@@ -339,17 +423,33 @@ $(document).ready(function () {
     });
     customerId = (parseInt($('#assign_customerId').attr('value')));
     let data = { staffId, customerId };
-    
-    fetch(`${API_URL}/staff/assignment-customer`, {
-      method: 'POST', // or 'PUT'
-      body: JSON.stringify(data), // data can be `string` or {object}!
-      headers: {
-        'Content-Type': 'application/json'
+
+    $.confirm({
+      title: false,
+      content: 'Bạn có muốn thực hiện các thay đổi!',
+      buttons: {
+        confirm: {
+          text: 'Đồng ý',
+          btnClass: 'btn-danger',
+          action: () => {
+            fetch(`${API_URL}/staff/assignment-customer`, {
+              method: 'POST', // or 'PUT'
+              body: JSON.stringify(data), // data can be `string` or {object}!
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => res.json())
+              .then(res => {
+                $.alert('Thực hiện thành công');
+              });
+          }
+        },
+        cancel: {
+          text: 'Hủy'
+        }
       }
-    }).then(res => res.json())
-      .then(res => {
-        console.log(res);
-      });
+    });
+
 
   })
 
@@ -371,26 +471,41 @@ $(document).ready(function () {
     console.log($('#modal_customerId')[0].value);
     console.log(method);
     data['customerType'] = type;
-    
-    fetch(`${API_URL}/customer`, {
-      method: method,
-      body: JSON.stringify(data), // data can be `string` or {object}!
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => res.json())
-      .then(res => {
-        console.log(res);
-        $('#customerForm')[0].reset();
-        $('#myModal').modal('hide');
-        if(method=='PUT'){
-          $(`#checkbox-row-${res.id}`).html(customerToTableRowHTML(res));
-        }else{
-          const pageString = $('#pagination-container .active > span')[0].innerHTML;
-          const pageNumber = parseInt(pageString);
-          loadData(`${API_URL}/customer/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+    $.confirm({
+      title: false,
+      content: 'Bạn có muốn thực hiện các thay đổi!',
+      buttons: {
+        confirm: {
+          text: 'Đồng ý',
+          btnClass: 'btn-danger',
+          action: () => {
+            fetch(`${API_URL}/customer`, {
+              method: method,
+              body: JSON.stringify(data), // data can be `string` or {object}!
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then(res => res.json())
+              .then(res => {
+                $('#buildingForm')[0].reset();
+                $('#myModal').modal('hide');
+                if (method == 'PUT') {
+                  $(`#checkbox-row-${res.id}`).html(buildingToTableRowHTML(res));
+                } else {
+                  const pageString = $('#pagination-container .active > span')[0].innerHTML;
+                  const pageNumber = parseInt(pageString);
+                  loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+                  console.log(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+                  $.alert('Thực hiện thành công');
+                }
+              });
+          },
+        },
+        cancel: {
+          text: 'Hủy'
         }
-      });
+      }
+    });
 
   });
 

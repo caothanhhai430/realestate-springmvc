@@ -1,26 +1,33 @@
 package com.javaweb.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.sql.Timestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import java.sql.Timestamp;
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractEntity {
-	
+
+	@CreatedDate
 	@Column(name="createddate")
 	protected Timestamp createdDate;
-	
+
+	@CreatedBy
 	@Column(name="createdby")
 	protected String createdBy;
-	
+
+	@LastModifiedDate
 	@Column(name="modifieddate")
 	protected Timestamp modifiedDate; 
-	
+
+	@LastModifiedBy
 	@Column(name="modifiedby")
 	protected String modifiedBy;
 
