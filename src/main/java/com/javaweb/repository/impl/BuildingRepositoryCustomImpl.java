@@ -1,24 +1,21 @@
 package com.javaweb.repository.impl;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.javaweb.Helper.MapToSqlSearch;
 import com.javaweb.Helper.ObjectToMap;
 import com.javaweb.builder.BuildingSearchBuilder;
-import com.javaweb.builder.BuildingSearchBuilder;
 import com.javaweb.entity.BuildingEntity;
+import com.javaweb.repository.BuildingRepositoryCustom;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.javaweb.repository.BuildingRepositoryCustom;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
@@ -67,7 +64,7 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 		if(builder.getStaffId()!=null) qlString += " inner join building.staffList staff";
 		qlString +=  "  where 1=1 ";
 		if(!where.isEmpty() || !specialSQL.isEmpty()){
-			qlString = qlString+  "  where 1=1 " + where + " " + specialSQL;
+			qlString = qlString+   where + " " + specialSQL;
 		}
 		if(builder.getStaffId()!=null) qlString = qlString + " AND staffid="+builder.getStaffId();
 		return qlString;

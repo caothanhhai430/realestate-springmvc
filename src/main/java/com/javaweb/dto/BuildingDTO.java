@@ -1,17 +1,12 @@
 package com.javaweb.dto;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import com.javaweb.entity.RentAreaEntity;
-import org.apache.commons.lang.StringUtils;
-
 import com.javaweb.enums.BuildingTypeEnum;
 import com.javaweb.enums.DistrictEnum;
-import org.codehaus.jackson.map.ObjectMapper;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BuildingDTO extends AbstractDTO{
 	
@@ -67,11 +62,12 @@ public class BuildingDTO extends AbstractDTO{
 		address = "";
 		if(StringUtils.isNotBlank(street)) address+=street;
 		if(StringUtils.isNotBlank(ward)) {
-			if(address.length()>0) address = address + ", " + ward;
+			if(address.length()>0) address = address + ", " ;
+			address+=ward;
 		}
 		if(StringUtils.isNotBlank(district)) {
-			if(address.length()>0) address = address + ", " + 
-				DistrictEnum.valueOf(district).getDistrictName();
+			if(address.length()>0) address = address + ", " ;
+			address += DistrictEnum.valueOf(district).getDistrictName();
 		}
 		return address;
 	}

@@ -1,6 +1,6 @@
 const API_URL = "http://localhost:8080/api-server";
 var currentRequestForm = "";
-var ITEMS_ON_PAGE = 10;
+var ITEMS_ON_PAGE = 5;
 var currentCareLoadMoreIndex = 1;
 var currentTourLoadMoreIndex = 1;
 
@@ -69,12 +69,9 @@ $(document).ready(function () {
       </tr>`
   }
 
-  const loadData = (url) => {
+  const loadData = (url, callback) => {
     console.log(url);
     var data = "";
-
-
-
     fetch(url)
       .then(res => res.json())
       .then(res => {
@@ -84,12 +81,12 @@ $(document).ready(function () {
           </tr>`
         })
         $('#data-customer-list')[0].innerHTML = data;
-
+        callback();
       }
       )
   }
 
-  const customerPagination = (numItems, itemsOnPage, currentPage) => {
+  const customerPagination = (numItems, itemsOnPage, currentPage, callback) => {
 
     $('#pagination-container').pagination({
       items: numItems,
@@ -99,15 +96,20 @@ $(document).ready(function () {
       prevText: "Previous",
       nextText: "Next",
       onPageClick: function (pageNumber) {
-        loadData(`${API_URL}/customer/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+        loadData(`${API_URL}/customer/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`, callback);
       }
     });
   }
 
-  const fetchFirstPagination = (url) => {
+  const hideLoading = () => {
+    $.LoadingOverlay("hide");
+  }
+
+  const fetchFirstPagination = (url, callback) => {
     console.log(url);
     fetch(url).then(res => res.json()).then(count => {
-      customerPagination(count, ITEMS_ON_PAGE, 1);
+      customerPagination(count, ITEMS_ON_PAGE, 1, callback);
+      callback();
     })
       .catch(e => {
         console.log('err' + e);
@@ -117,9 +119,11 @@ $(document).ready(function () {
 
 
   const fetchData = async () => {
+    $.LoadingOverlay("show");
     if (!!currentRequestForm) currentRequestForm = $('#customer_form').serialize();
-    loadData(`${API_URL}/customer/list?${currentRequestForm}`);
-    fetchFirstPagination(`${API_URL}/customer/count?${currentRequestForm}`);
+    loadData(`${API_URL}/customer/list?${currentRequestForm}&page=1&size=${ITEMS_ON_PAGE}`, () => {
+      fetchFirstPagination(`${API_URL}/customer/count?${currentRequestForm}&page=1&size=${ITEMS_ON_PAGE}`, hideLoading);
+    });
   }
 
   fetchData();
@@ -131,6 +135,7 @@ $(document).ready(function () {
 
 
   $("#dynamic-table").on("click", "button[id^='btn_assign']", function () {
+    $.LoadingOverlay("show");
     var tbody =
       document.getElementById("tBody");
     let id = $(this).attr('id');
@@ -145,14 +150,18 @@ $(document).ready(function () {
           data += '<tr> <td><input type="hidden" id="assignstaff_code' + e[0] + '"> <input type="checkbox"' + e[2] + ' ></td> <td>' + e[1] + '</td> </tr>';
         })
         tbody.innerHTML = data;
+        $.LoadingOverlay("hide");
       }
       )
+      .catch(e => {
+        $.LoadingOverlay("hide");
+      })
 
   });
 
 
   $("#dynamic-table").on("click", "button[id^='btn_update']", function () {
-    console.log('abc');
+    $.LoadingOverlay("show");
     $('#submit_save')[0].innerHTML = 'Cập nhật';
 
     let id = $(this).attr('id');
@@ -163,21 +172,30 @@ $(document).ready(function () {
       .then(res => {
         $('#customerForm')[0].reset();
         binding(res);
+        $.LoadingOverlay("hide");
       })
       .catch(e => {
         console.log(e);
+        $.LoadingOverlay("hide");
       })
   })
 
 
   $("#btn-addCareNote").click(() => {
-    const customerId = $('#id-customer-trans').val();
-    console.log(customerId);
+    addNoteAPI(0);
+  })
 
+
+  $("#btn-addTourNote").click(() => {
+    addNoteAPI(1);
+  })
+
+  const addNoteAPI = (type) => {
+    const customerId = $('#id-customer-trans').val();
     $.confirm({
       title: 'Thêm ghi chú',
-      boxWidth:'600px',
-      useBootstrap:false,
+      boxWidth: '600px',
+      useBootstrap: false,
       content: '' +
         '<form action=""  class="formName">' +
         '<div class="form-group">' +
@@ -194,8 +212,9 @@ $(document).ready(function () {
               $.alert('');
               return false;
             }
+            $.LoadingOverlay("show");
             const data = {
-              note, customerId, type: 0
+              note, customerId, type
             }
 
             fetch(`${API_URL}/transaction`, {
@@ -206,8 +225,9 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
-                const tbody = $('#tbody-customerCare')[0];
+                const tbody = $(`#tbody-customer${type == 0 ? 'Care' : 'Tour'}`)[0];
                 tbody.innerHTML = transactionToTableRowHTML(res) + tbody.innerHTML;
+                $.LoadingOverlay("hide");
                 $.alert('Thao tác thành công');
               })
               .catch(e => {
@@ -229,49 +249,7 @@ $(document).ready(function () {
         });
       }
     });
-
-  })
-
-
-  $("#btn-addTourNote").click(() => {
-    const note = $('#customerTourNote').val();
-    const customerId = $('#id-customer-trans').val();
-    console.log(customerId);
-    const data = {
-      note, customerId, type: 1
-    }
-    console.log(JSON.stringify(data));
-    $.confirm({
-      title: false,
-      content: 'Bạn có muốn thực hiện các thay đổi!',
-      buttons: {
-        confirm: {
-          text: 'Đồng ý',
-          btnClass: 'btn-danger',
-          action: () => {
-            fetch(`${API_URL}/transaction`, {
-              method: 'POST',
-              body: JSON.stringify(data),
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }).then(res => res.json())
-              .then(res => {
-                const tbody = $('#tbody-customerTour')[0];
-                tbody.innerHTML = transactionToTableRowHTML(res) + tbody.innerHTML;
-                $('#customerTourNote').val('')
-              })
-              .catch(e => {
-                console.log(e);
-              })
-          }
-        },
-        cancel: {
-          text: 'Hủy'
-        }
-      }
-    });
-  })
+  }
 
 
   $("#dynamic-table").on("click", "button[id^='btn_care']", function () {
@@ -279,33 +257,66 @@ $(document).ready(function () {
     let id = $(this).attr('id');
     let customerId = id.substr(id.indexOf("_code") + 5);
     $('#id-customer-trans').val(customerId);
-    const customerCareTable = $('#customerCare > tbody')[0];
-    const customerTourTable = $('#customerTour > tbody')[0];
-    let customerCareData = "";
-    let customerTourData = "";
-    fetch(`${API_URL}/transaction/list?customerId=${customerId}`)
+    loadTransaction();
+  })
+  const loadTransaction = () => {
+    $.LoadingOverlay("show");
+    currentCareLoadMoreIndex = 0;
+    currentTourLoadMoreIndex = 0;
+
+    $(`#customerCare > tbody`)[0].innerHTML = "";
+    $(`#customerTour > tbody`)[0].innerHTML = "";
+    loadMoreTransaction(0, () => {
+      loadMoreTransaction(1, () => {
+        $.LoadingOverlay("hide");
+      });
+    });
+  }
+
+  $("#btn-loadMoreCareNote").click(() => {
+    $.LoadingOverlay("show");
+    loadMoreTransaction(0, () => $.LoadingOverlay("hide"));
+  }
+  )
+
+  $("#btn-loadMoreTourNote").click(() => {
+    $.LoadingOverlay("show");
+    loadMoreTransaction(1, () => $.LoadingOverlay("hide"));
+  }
+  )
+
+  const loadMoreTransaction = (type, callback) => {
+    const customerId = $('#id-customer-trans').val();
+    const table = $(`#customer${type == 0 ? 'Care' : 'Tour'} > tbody`)[0];
+    let tableData = "";
+    let page = null;
+    if (type == 0) {
+      currentCareLoadMoreIndex += 1;
+      page = currentCareLoadMoreIndex;
+    }
+    else if (type == 1) {
+      currentTourLoadMoreIndex += 1;
+      page = currentTourLoadMoreIndex;
+    }
+    fetch(`${API_URL}/transaction/list?customerId=${customerId}&type=${type}&page=${page}&size=${ITEMS_ON_PAGE}`)
       .then(res => res.json())
       .then(res => {
         res.map(e => {
           const row = transactionToTableRowHTML(e);
-          if (e.type == 0) {
-            customerCareData += row;
-          } else if (e.type == 1) customerTourData += row;
+          tableData += row;
         })
-        customerCareTable.innerHTML = customerCareData;
-        customerTourTable.innerHTML = customerTourData;
-
+        table.innerHTML += tableData;
+        callback();
       })
       .catch(e => {
         console.log(e);
       })
-
-  })
+  }
 
 
   $("#btn_add_customer").click(() => {
     $('#submit_save')[0].innerHTML = 'Thêm mới';
-
+    $('#modal_customerId').val('');
     $('#customerForm')[0].reset();
   })
 
@@ -348,6 +359,7 @@ $(document).ready(function () {
           text: 'Đồng ý',
           btnClass: 'btn-danger',
           action: () => {
+            $.LoadingOverlay("show");
             fetch(`${API_URL}/customer`, {
               method: 'DELETE',
               body: JSON.stringify(data),
@@ -357,6 +369,7 @@ $(document).ready(function () {
             }).then(res => res.json())
               .then(res => {
                 if (res = true) {
+                  $.LoadingOverlay("hide");
                   $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
                   $.alert('Đã xóa thành công');
                 }
@@ -385,6 +398,7 @@ $(document).ready(function () {
           text: 'Đồng ý',
           btnClass: 'btn-danger',
           action: () => {
+            $.LoadingOverlay("show");
             fetch(`${API_URL}/customer`, {
               method: 'DELETE',
               body: JSON.stringify(data),
@@ -393,6 +407,7 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
+                $.LoadingOverlay("hide");
                 if (res = true) {
                   $(this).closest("tr").remove();
                   $.alert('Đã xóa thành công');
@@ -432,6 +447,7 @@ $(document).ready(function () {
           text: 'Đồng ý',
           btnClass: 'btn-danger',
           action: () => {
+            $.LoadingOverlay("show");
             fetch(`${API_URL}/staff/assignment-customer`, {
               method: 'POST', // or 'PUT'
               body: JSON.stringify(data), // data can be `string` or {object}!
@@ -440,6 +456,7 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
+                $.LoadingOverlay("hide");
                 $.alert('Thực hiện thành công');
               });
           }
@@ -470,6 +487,7 @@ $(document).ready(function () {
 
     console.log($('#modal_customerId')[0].value);
     console.log(method);
+    console.log(JSON.stringify(data));
     data['customerType'] = type;
     $.confirm({
       title: false,
@@ -479,6 +497,7 @@ $(document).ready(function () {
           text: 'Đồng ý',
           btnClass: 'btn-danger',
           action: () => {
+            $.LoadingOverlay("show");
             fetch(`${API_URL}/customer`, {
               method: method,
               body: JSON.stringify(data), // data can be `string` or {object}!
@@ -487,16 +506,20 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
-                $('#buildingForm')[0].reset();
+                console.log(res);
+                $('#customerForm')[0].reset();
                 $('#myModal').modal('hide');
                 if (method == 'PUT') {
-                  $(`#checkbox-row-${res.id}`).html(buildingToTableRowHTML(res));
+                  $.LoadingOverlay("hide");
+                  $(`#checkbox-row-${res.id}`).html(customerToTableRowHTML(res));
+                  $.alert('Thực hiện thành công');
                 } else {
                   const pageString = $('#pagination-container .active > span')[0].innerHTML;
                   const pageNumber = parseInt(pageString);
-                  loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
-                  console.log(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
-                  $.alert('Thực hiện thành công');
+                  loadData(`${API_URL}/customer/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`, () => {
+                    hideLoading();
+                    $.alert('Thực hiện thành công');
+                  });
                 }
               });
           },

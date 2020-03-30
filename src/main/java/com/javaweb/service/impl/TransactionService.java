@@ -20,7 +20,7 @@ public class TransactionService implements ITransactionService{
 
 	@Override
 	public List<TransactionDTO> findAll(TransactionDTO dto, Pageable pageable) {
-		List<TransactionEntity> results =   repository.findAll(dto.getCustomerId(),pageable);
+		List<TransactionEntity> results =   repository.findAll(dto.getCustomerId(),dto.getType(),pageable);
 		return results.stream()
 				.map(item-> {
 					TransactionDTO temp = (TransactionDTO)DTOConverter.toModel(item,TransactionDTO.class);

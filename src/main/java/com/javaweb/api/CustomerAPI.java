@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,11 +46,6 @@ public class CustomerAPI {
 	
 	@RequestMapping(value = "",method = RequestMethod.POST,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	public CustomerDTO newCustomer(@RequestBody CustomerDTO customer) {
-//		customer.setCreatedBy("admin");
-//		customer.setModifiedBy("admin");
-//		customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-//		customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-//
 		Long id = service.save(customer);
 		
 		CustomerDTO result = service.findById(id);
@@ -60,12 +54,6 @@ public class CustomerAPI {
 
 	@RequestMapping(value = "",method = RequestMethod.PUT,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	protected CustomerDTO updateCustomer(@RequestBody CustomerDTO customer) {
-
-		customer.setCreatedBy("admin");
-		customer.setModifiedBy("admin");
-		customer.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		customer.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-
 		service.update(customer);
 		CustomerDTO resp = service.findById(customer.getId());
 		return resp;

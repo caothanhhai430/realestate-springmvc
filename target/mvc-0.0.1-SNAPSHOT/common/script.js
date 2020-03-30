@@ -40,11 +40,9 @@ $(document).ready(function () {
     </td>`
   }
 
-  const loadData = (url) => {
+  const loadData = (url,callback) => {
     console.log(url);
     var data = "";
-
-
 
     fetch(url)
       .then(res => res.json())
@@ -55,13 +53,13 @@ $(document).ready(function () {
           </tr>`
         })
         $('#data-building-list')[0].innerHTML = data;
-
+        callback();
       }
       )
   }
 
 
-  const buildingPagination = (numItems, itemsOnPage, currentPage) => {
+  const buildingPagination = (numItems, itemsOnPage, currentPage,callback) => {
 
     $('#pagination-container').pagination({
       items: numItems,
@@ -71,28 +69,34 @@ $(document).ready(function () {
       prevText: "Previous",
       nextText: "Next",
       onPageClick: function (pageNumber) {
-        loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
+        loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`,callback);
       }
     });
   }
 
-  const fetchFirstPagination = (url) => {
+  const fetchFirstPagination = (url,callback) => {
     console.log(url);
     fetch(url).then(res => res.json()).then(count => {
       console.log(count);
-      buildingPagination(count, ITEMS_ON_PAGE, 1);
+      buildingPagination(count, ITEMS_ON_PAGE, 1,callback);
+      callback();
     })
       .catch(e => {
         console.log('err' + e);
       })
   }
 
+  const hideLoading = () => {
+    $.LoadingOverlay("hide");
+  }
 
 
   const fetchData = async () => {
+    $.LoadingOverlay("show");
     if (!!currentRequestForm) currentRequestForm = $('#building_form').serialize();
-    loadData(`${API_URL}/building/list?${currentRequestForm}`);
-    fetchFirstPagination(`${API_URL}/building/count?${currentRequestForm}`);
+    loadData(`${API_URL}/building/list?${currentRequestForm}`,()=>{
+      fetchFirstPagination(`${API_URL}/building/count?${currentRequestForm}`,hideLoading);
+    })
   }
 
   fetchData();
@@ -104,6 +108,7 @@ $(document).ready(function () {
 
 
   $("#dynamic-table").on("click", "button[id^='btn_assign']", function () {
+    $.LoadingOverlay("show");
     var tbody =
       document.getElementById("tBody");
     let id = $(this).attr('id');
@@ -117,14 +122,18 @@ $(document).ready(function () {
           data += '<tr> <td><input type="hidden" id="assignstaff_code' + e[0] + '"> <input type="checkbox"' + e[2] + ' ></td> <td>' + (e[1]==null? '':e[1]) + '</td> </tr>';
         })
         tbody.innerHTML = data;
+        $.LoadingOverlay("hide");
       }
       )
+      .catch(e => {
+        $.LoadingOverlay("hide");
+      })
 
   });
 
 
   $("#dynamic-table").on("click", "button[id^='btn_update']", function () {
-    console.log('abc');
+    $.LoadingOverlay("show");
     $('#submit_save')[0].innerHTML = 'Cập nhật';
 
     let id = $(this).attr('id');
@@ -135,16 +144,18 @@ $(document).ready(function () {
       .then(res => {
         $('#buildingForm')[0].reset();
         binding(res);
+        $.LoadingOverlay("hide"); 
       })
       .catch(e => {
         console.log(e);
+        $.LoadingOverlay("hide");
       })
   })
 
 
   $("#btn_add_building").click(() => {
     $('#submit_save')[0].innerHTML = 'Thêm mới';
-
+    $('#modal_buildingId').val('');
     $('#buildingForm')[0].reset();
   })
 
@@ -187,6 +198,7 @@ $(document).ready(function () {
           text: 'Đồng ý',
           btnClass: 'btn-danger',
           action: () => {
+            $.LoadingOverlay("show");
             fetch('http://localhost:8080/api-server/building', {
               method: 'DELETE',
               body: JSON.stringify(data),
@@ -196,6 +208,7 @@ $(document).ready(function () {
             }).then(res => res.json())
               .then(res => {
                 if (res = true) {
+                  $.LoadingOverlay("hide");
                   $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
                   $.alert('Đã xóa thành công');
                 }
@@ -225,6 +238,7 @@ $(document).ready(function () {
           text: 'Đồng ý',
           btnClass: 'btn-danger',
           action: () => {
+            $.LoadingOverlay("show");
             fetch('http://localhost:8080/api-server/building', {
               method: 'DELETE',
               body: JSON.stringify(data),
@@ -233,6 +247,7 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
+                $.LoadingOverlay("hide");
                 if (res = true) {
                   $(this).closest("tr").remove();
                   $.alert('Đã xóa thành công');
@@ -272,6 +287,7 @@ $(document).ready(function () {
           text: 'Đồng ý',
           btnClass: 'btn-danger',
           action: () => {
+            $.LoadingOverlay("show");
             fetch('http://localhost:8080/api-server/staff/assignment', {
               method: 'POST', // or 'PUT'
               body: JSON.stringify(data), // data can be `string` or {object}!
@@ -280,6 +296,7 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
+                $.LoadingOverlay("hide");
                 $.alert('Thực hiện thành công');
               });
           }
@@ -320,6 +337,7 @@ $(document).ready(function () {
             text: 'Đồng ý',
             btnClass: 'btn-danger',
             action: () => {
+              $.LoadingOverlay("show");
               fetch('http://localhost:8080/api-server/building', {
                 method: method,
                 body: JSON.stringify(data), // data can be `string` or {object}!
@@ -332,14 +350,18 @@ $(document).ready(function () {
                   $('#buildingForm')[0].reset();
                   $('#myModal').modal('hide');
                   if (method == 'PUT') {
+                    $.LoadingOverlay("hide");
                     $(`#checkbox-row-${res.id}`).html(buildingToTableRowHTML(res));
+                    $.alert('Thực hiện thành công');
                   } else {
                     const pageString = $('#pagination-container .active > span')[0].innerHTML;
                     const pageNumber = parseInt(pageString);
-                    loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
-                    console.log(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`);
-                    $.alert('Thực hiện thành công');
+                    loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`, () => {
+                      hideLoading();
+                      $.alert('Thực hiện thành công');
+                    });
                   }
+                    
                 });
             },
           },

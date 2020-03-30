@@ -1,20 +1,17 @@
 package com.javaweb.service.impl;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
 import com.javaweb.builder.CustomerSearchBuilder;
-import com.javaweb.entity.RentAreaEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import com.javaweb.converter.DTOConverter;
 import com.javaweb.dto.CustomerDTO;
 import com.javaweb.entity.CustomerEntity;
 import com.javaweb.repository.CustomerRepository;
 import com.javaweb.service.ICustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService implements ICustomerService{
@@ -74,7 +71,9 @@ public class CustomerService implements ICustomerService{
 //
 	public Long update(CustomerDTO customer) {
 		CustomerEntity entity = DTOConverter.toModel(customer, CustomerEntity.class);
-
+		CustomerEntity existEntity = repository.findById(customer.getId()).get();
+		entity.setStaffList(existEntity.getStaffList());
+		entity.setTransactionList(existEntity.getTransactionList());
 		repository.save(entity);
 		return entity.getId();
 	}
