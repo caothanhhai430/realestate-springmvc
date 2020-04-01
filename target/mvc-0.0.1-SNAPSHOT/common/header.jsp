@@ -1,7 +1,6 @@
-
 <div id="navbar" class="navbar navbar-default">
 	<script type="text/javascript">
-		try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+		try { ace.settings.check('navbar', 'fixed') } catch (e) { }
 	</script>
 
 	<div class="navbar-container" id="navbar-container">
@@ -29,16 +28,20 @@
 
 				<li class="light-blue">
 					<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-						<img class="nav-user-photo"  alt="Jason s Photo" src='<c:url value="/common/template/assets/avatars/user.jpg"/>' />
+						<img class="nav-user-photo" alt="Jason s Photo"
+							src='<c:url value="/common/template/assets/avatars/user.jpg"/>' />
 						<span class="user-info">
 							<small>Welcome,</small>
-							Jason
+							<sec:authorize access="isAuthenticated()">								
+								<sec:authentication property="principal.username" />
+							</sec:authorize>
 						</span>
 
 						<i class="ace-icon fa fa-caret-down"></i>
 					</a>
 
-					<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+					<ul
+						class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 						<li>
 							<a href="#">
 								<i class="ace-icon fa fa-cog"></i>
@@ -47,7 +50,7 @@
 						</li>
 
 						<li>
-							<a href="profile.html">
+							<a href='#>'>
 								<i class="ace-icon fa fa-user"></i>
 								Profile
 							</a>
@@ -56,7 +59,7 @@
 						<li class="divider"></li>
 
 						<li>
-							<a href="#">
+							<a href='<c:url value="/logout"/>'>
 								<i class="ace-icon fa fa-power-off"></i>
 								Logout
 							</a>

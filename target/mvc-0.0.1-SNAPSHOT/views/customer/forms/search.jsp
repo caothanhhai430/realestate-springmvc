@@ -59,7 +59,7 @@
 
                     <div id="form-field-11" class="autosize-transition form-control"
                         style="overflow: hidden; padding: 0px;border: 0px; height: 0px;"></div>
-                    <button id="btn_search" type="button" class="btn btn-purple btn-sm">
+                    <button id="btn_search" type="button" style="margin-top: 25px;" class="btn btn-purple btn-sm">
                         <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
                         Tìm kiếm
                     </button>

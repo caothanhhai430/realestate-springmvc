@@ -3,22 +3,24 @@
 <!DOCTYPE html>
 <html lang="vi">
 
-   <%@ include file="/common/head.jsp" %>
-	<body>
-			<%@ include file="/common/header.jsp" %>
+<%@ include file="/common/head.jsp" %>
 
-		<div class="main-container" id="main-container">
-			<script type="text/javascript">
-				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
-			</script>
+<body>
+	<%@ include file="/common/header.jsp" %>
 
-			
-				<%@ include file="/common/sidebar.jsp" %>
+	<div class="main-container" id="main-container">
+		<script type="text/javascript">
+			try { ace.settings.check('main-container', 'fixed') } catch (e) { }
+		</script>
 
 
-			<sitemesh:write property='body'/>
-		
-		</div><!-- /.main-container -->
+		<%@ include file="/common/sidebar.jsp" %>
 
-	</body>
+
+		<sitemesh:write property='body' />
+
+	</div><!-- /.main-container -->
+
+</body>
+
 </html>

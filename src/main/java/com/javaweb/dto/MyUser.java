@@ -6,7 +6,17 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 public class MyUser extends User {
+    private Long id;
+
     private String fullname;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getFullname() {
         return fullname;

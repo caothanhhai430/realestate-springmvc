@@ -24,7 +24,7 @@
                 <form:form id="building_form" modelAttribute="buildingRequest" method="GET">
 
 
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <label for="form-field-8">Tên tòa nhà</label>
 
@@ -42,11 +42,11 @@
                         </div>
 
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <label for="form-field-8">Quận,Huyện</label>
 
-                            <form:select class="form-control" path="district" >
+                            <form:select class="form-control" path="district">
                                 <form:option value="" label="--- Select ---" />
                                 <form:options items="${districtsMap}" />
                             </form:select>
@@ -64,7 +64,7 @@
 
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-3">
                             <label for="form-field-8">Diện tích từ</label>
 
@@ -88,7 +88,7 @@
 
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div class="col-sm-4">
                             <label for="form-field-8">Tên quản lý</label>
 
@@ -100,27 +100,35 @@
                             <form:input class="form-control" path="managerPhone" />
                         </div>
                         <div class="col-sm-4">
-                            <label for="form-field-8">Nhân viên vụ trách</label>
+                            <sec:authorize access="hasAuthority('ADMIN')">
+                                <label for="form-field-8">Nhân viên vụ trách</label>
 
-                            <form:select class="form-control" path="staffId" >
-                                <form:option value="" label="--- Select ---" />
-                                <form:options items="${staffMap}" />
-                            </form:select>
+                                <form:select class="form-control" path="staffId">
+                                    <form:option value="" label="--- Select ---" />
+                                    <form:options items="${staffMap}" />
+                                </form:select>
+                            </sec:authorize>
+                            <sec:authorize access="hasAuthority('STAFF')">
+                                <input type="hidden" class="form-control" name="staffId" value=<sec:authentication
+                                    property="principal.id" />>
+                            </sec:authorize>
+
                         </div>
 
                     </div>
 
+                    <div class="form-group row">
 
-                    <div>
-                        <form:checkbox path="buildingType" value="NOI_THAT" /> Nội thất
-                        <form:checkbox path="buildingType" value="TANG_TRET" /> Tầng trệt
-                        <form:checkbox path="buildingType" value="NGUYEN_CAN" /> Nguyên căn
+                        <div>
+                            <form:checkbox path="buildingType" value="NOI_THAT" /> Nội thất
+                            <form:checkbox path="buildingType" value="TANG_TRET" /> Tầng trệt
+                            <form:checkbox path="buildingType" value="NGUYEN_CAN" /> Nguyên căn
+                        </div>
                     </div>
-
 
                     <div id="form-field-11" class="autosize-transition form-control"
                         style="overflow: hidden; padding: 0px;border: 0px; height: 0px;"></div>
-                    <button id="btn_search" type="button" class="btn btn-purple btn-sm">
+                    <button id="btn_search" type="button" style="margin-top: 25px;" class="btn btn-purple btn-sm">
                         <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
                         Tìm kiếm
                     </button>

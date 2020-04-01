@@ -1,11 +1,13 @@
 package com.javaweb.service.impl;
 
+import com.javaweb.dto.MyUser;
+import com.javaweb.entity.RoleEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.repository.UserRepository;
+import com.javaweb.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,19 +29,18 @@ public class CustomUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("User not  found");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
-//        for(RoleEntity roleEntity : userEntity.getRoleList()){
-//            if(roleEntity.getType() == Constant.ADMIN_ROLE){
-//                authorities.add(new SimpleGrantedAuthority("ADMIN"));
-//            }else if(roleEntity.getType() == Constant.STAFF_ROLE){
-//                authorities.add(new SimpleGrantedAuthority("STAFF"));
-//            }
-//        }
-        authorities.add(new SimpleGrantedAuthority("ADMIN"));
-        authorities.add(new SimpleGrantedAuthority("STAFF"));
+        for(RoleEntity roleEntity : userEntity.getRoleList()){
+            if(roleEntity.getType() == Constant.ADMIN_ROLE){
+                authorities.add(new SimpleGrantedAuthority("ADMIN"));
+            }else if(roleEntity.getType() == Constant.STAFF_ROLE){
+                authorities.add(new SimpleGrantedAuthority("STAFF"));
+            }
+        }
 
 
-        User user = new User(userEntity.getUsername(),userEntity.getPassword(),true,true,true,true,authorities);
-//        user.setFullname(userEntity.getFullname());
+        MyUser user = new MyUser(userEntity.getUsername(),userEntity.getPassword(),true,true,true,true,authorities);
+        user.setFullname(userEntity.getFullname());
+        user.setId(userEntity.getId());
         return user;
     }
 }

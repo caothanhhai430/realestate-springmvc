@@ -1,7 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@include file="/common/taglib.jsp" %>
+
+<%@ page import="com.javaweb.utils.SecurityUtils" %>
 
 <head>
+	
+	<script>
+		const CONST_HOST_URL = "http://localhost:8080";
+		const CONST_ROLE = `${SecurityUtils.getAuthorities()}`;
+	</script>	
+
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta charset="utf-8" />
 	<title>Dashboard - Ace Admin</title>
@@ -12,11 +21,9 @@
 
 	<meta name="description" content="overview &amp; stats" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
+	<link rel="stylesheet" 	href='<c:url value="/common/template/css/bootstrap.min.css" /> ' />
+	<link rel="stylesheet" 	href='<c:url value="/common/template/css/bootstrap-theme.min.css" /> ' />
 	<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-
 	<link rel="stylesheet"
 		href='<c:url value="/common/template/assets/font-awesome/4.2.0/css/font-awesome.min.css" />' />
 	<link rel="stylesheet" href='<c:url value="/common/template/assets/fonts/fonts.googleapis.com.css" />' />
@@ -24,5 +31,5 @@
 		href='<c:url value="/common/template/assets/css/ace.min.css" /> ' />
 	<link rel="stylesheet" href='<c:url value="/common/building.css" />' />
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+	<link rel="stylesheet" href='<c:url value="/common/template/css/jquery-confirm.min.css" />'/>
 </head>

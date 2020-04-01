@@ -181,7 +181,7 @@
 
 				</div>
 				<div class="modal-footer">
-					<button id="submit_save" type="button" class="btn btn-default">
+					<button id="submit_save" type="button" class="btn btn-success">
 							Thêm mới
 					</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>

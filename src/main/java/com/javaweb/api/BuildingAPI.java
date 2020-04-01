@@ -34,6 +34,7 @@ public class BuildingAPI{
 
 	@GetMapping("/count")
 	public long count(@ModelAttribute BuildingDTO buildingRequest){
+
 		return service.count(buildingRequest);
 	}
 

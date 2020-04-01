@@ -2,8 +2,10 @@
 
 
 <div class="col-xs-12">
-    <h3 class="header smaller lighter blue">Danh sách tòa nhà</h3>
+    <h2 class="bigger lighter blue">Danh sách tòa nhà</h2>
 
+
+    <sec:authorize access="hasAuthority('ADMIN')">
     <div class="clearfix">
         <div class="pull-right tableTools-container">
             <div class="btn-group btn-overlap">
@@ -17,27 +19,13 @@
             </div>
         </div>
     </div>
+    </sec:authorize>
     <div class="table-header">
     </div>
 
     <div>
         <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-            <div class="row">
-                <div class="col-xs-6">
-                    <div class="dataTables_length" id="dynamic-table_length"><label>Display <select
-                                name="dynamic-table_length" aria-controls="dynamic-table" class="form-control input-sm">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select> records</label></div>
-                </div>
-                <div class="col-xs-6">
-                    <div id="dynamic-table_filter" class="dataTables_filter"><label>Search:<input type="search"
-                                class="form-control input-sm" placeholder="" aria-controls="dynamic-table"></label>
-                    </div>
-                </div>
-            </div>
+            
             <table id="dynamic-table"
                 class="table table-striped table-bordered table-hover dataTable no-footer DTTT_selectable" role="grid"
                 aria-describedby="dynamic-table_info">
