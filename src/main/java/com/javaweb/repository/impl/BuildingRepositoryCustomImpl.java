@@ -79,7 +79,7 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 		if(builder.getRentCostTo()!=null) {
 			sql.append(" AND " + prefix + "rentCost <="+builder.getRentCostTo());
 		}
-		
+
 			if(builder.getRentAreaFrom()!=null || builder.getRentAreaTo()!=null) {
 			sql.append(" AND EXISTS (SELECT ra FROM RentAreaEntity ra WHERE ra.building=" + prefix + "id");
 
@@ -92,12 +92,12 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 			sql.append(")");
 		}
 		if(builder.getBuildingType()!=null && builder.getBuildingType().length>0) {
-			
+
 			sql.append(" AND (");
 			String s = Arrays.stream(builder.getBuildingType())
 			.map(e->"type LIKE '%"+e+"%'").collect(Collectors.joining(" OR "));
 			sql.append(s+")");
-			
+
 	}
 		return sql.toString();
 	}

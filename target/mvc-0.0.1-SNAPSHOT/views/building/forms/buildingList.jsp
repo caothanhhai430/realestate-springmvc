@@ -2,11 +2,12 @@
 
 
 <div class="col-xs-12">
-    <h2 class="bigger lighter blue">Danh sách tòa nhà</h2>
 
-    <div>
-        <sec:authorize access="hasAuthority('ADMIN')">
-            <div class="pull-right tableTools-container">
+    <div style="display:inline-block;width:100%;">
+        <h2 style="display:inline-block;" class="bigger lighter blue">Danh sách tòa nhà</h2>
+        <div class="pull-right tableTools-container">
+            <sec:authorize access="hasAuthority('ADMIN')">
+
                 <div class="btn-group btn-overlap">
                     <div class="ColVis btn-group" title="" data-original-title="Show/hide columns">
                         <button id="btn_add_building" data-toggle="modal" data-target="#myModal"
@@ -16,15 +17,16 @@
                         tabindex="0" aria-controls="dynamic-table" data-original-title="Print view"><span>
                             <i class="fa fa-trash bigger-110 grey"></i></span></a>
                 </div>
-            </div>
+        </div>
         </sec:authorize>
+
     </div>
     <div class="table-header">
     </div>
 
     <div>
         <div id="dynamic-table_wrapper" class="dataTables_wrapper form-inline no-footer">
-            
+
             <table id="dynamic-table"
                 class="table table-striped table-bordered table-hover dataTable no-footer DTTT_selectable" role="grid"
                 aria-describedby="dynamic-table_info">
@@ -60,7 +62,7 @@
                 <tbody id="data-building-list">
                 </tbody>
             </table>
-            <div id="pagination-container"></div>
+            <div id="pagination-container" style="margin-top: 25px;"></div>
 
         </div>
     </div>

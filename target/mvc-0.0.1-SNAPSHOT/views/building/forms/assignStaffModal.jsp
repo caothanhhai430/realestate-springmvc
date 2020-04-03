@@ -25,7 +25,7 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button id="saveAssignmentStaff" type="button" class="btn btn-default" data-dismiss="modal">Lưu thay
+        <button id="saveAssignmentStaff" type="button" class="btn btn-success" data-dismiss="modal">Lưu thay
           đổi</button>
       </div>
     </div>

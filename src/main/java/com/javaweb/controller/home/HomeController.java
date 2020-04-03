@@ -6,6 +6,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 public class HomeController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView home(){
+    public ModelAndView home(@RequestParam(required = false) Boolean error){
         ModelAndView modelView = new ModelAndView("login");
-
+        if(error!=null) modelView.addObject("error",error);
         return modelView;
     }
 

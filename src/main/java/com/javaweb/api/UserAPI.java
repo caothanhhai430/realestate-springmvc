@@ -1,14 +1,13 @@
 package com.javaweb.api;
 
 import com.javaweb.dto.UserDTO;
-import com.javaweb.paging.impl.PageRequest;
 import com.javaweb.service.IUserService;
-import com.javaweb.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Tuple;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,10 +23,58 @@ public class UserAPI{
 	IUserService service;
 	
 	@GetMapping("/list")
-	protected List<UserDTO> findAll(@ModelAttribute UserDTO userRequest, @ModelAttribute PageRequest pageRequest){
+	protected List<UserDTO> findAll(@ModelAttribute UserDTO userRequest){
+		Pageable pageable = null;
+		if(userRequest.getPage()!=null && userRequest.getSize()!=null)
+			pageable = PageRequest.of(userRequest.getPage().intValue(),userRequest.getSize().intValue());
 
-		List<UserDTO> results =  service.findAll(userRequest, pageRequest);
+		List<UserDTO> results =  service.findAll(userRequest, pageable);
 		return results;
+	}
+
+
+	@GetMapping
+	public UserDTO findById(@RequestParam Long id){
+		UserDTO result = service.findById(id);
+		return result;
+
+	}
+
+
+	@RequestMapping(value = "",method = RequestMethod.POST,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+	public UserDTO newUser(@RequestBody UserDTO user) {
+		Long id = service.save(user);
+
+		UserDTO result = service.findById(id);
+		return result;
+	}
+
+
+	@RequestMapping(value = "",method = RequestMethod.PUT,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+	public UserDTO updateUser(@RequestBody UserDTO user) {
+		Long id = service.update(user);
+
+		UserDTO result = service.findById(id);
+		return result;
+	}
+
+
+	@RequestMapping(value = "",method = RequestMethod.DELETE,consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+	public boolean deleteUser(@RequestBody UserDTO user) {
+		try{
+			service.lockUser(user.getId());
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+	@GetMapping("/count")
+	public long count(@ModelAttribute UserDTO userRequest){
+
+		return service.count(userRequest);
 	}
 
 	@RequestMapping(value = {"/assignment"},method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -68,26 +115,16 @@ public class UserAPI{
 
 	@PostMapping
 	protected UserDTO newuser(@ModelAttribute UserDTO user){
-//		user.setCreatedBy("admin");
-//		user.setModifiedBy("admin");
-//		user.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-//		user.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-
-		UserService service = new UserService();
 		Long id = service.save(user);
-		UserDTO get = service.findById(id);
-		return get;
+		UserDTO resp = service.findById(id);
+		return resp;
 	}
 
 	@PutMapping
 	public UserDTO update(@ModelAttribute UserDTO user){
-		user.setModifiedBy("admin");
-		user.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-
-		UserService service = new UserService();
 		Long id = service.update(user);
-		UserDTO get = service.findById(id);
-		return get;
+		UserDTO resp = service.findById(id);
+		return resp;
 	}
 
 

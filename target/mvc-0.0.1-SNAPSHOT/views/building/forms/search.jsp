@@ -119,7 +119,7 @@
 
                     <div class="form-group row">
 
-                        <div>
+                        <div class="col-sm-8">
                             <form:checkbox path="buildingType" value="NOI_THAT" /> Nội thất
                             <form:checkbox path="buildingType" value="TANG_TRET" /> Tầng trệt
                             <form:checkbox path="buildingType" value="NGUYEN_CAN" /> Nguyên căn

@@ -18,31 +18,8 @@ public class UserEntity extends AbstractEntity{
 
 	private String username;
 	private String password;
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setBuildingList(List<BuildingEntity> buildingList) {
-		this.buildingList = buildingList;
-	}
-
-	public Set<CustomerEntity> getCustomerList() {
-		return customerList;
-	}
-
+	private String avatar;
+	private String phone;
 
 	@ManyToMany(mappedBy = "staffList",fetch = FetchType.LAZY	)
 	List<BuildingEntity> buildingList;
@@ -53,6 +30,22 @@ public class UserEntity extends AbstractEntity{
 	@ManyToMany(mappedBy = "userList",fetch = FetchType.LAZY)
 	Set<RoleEntity> roleList;
 
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 
 	public Long getId() {
 		return id;
@@ -93,4 +86,30 @@ public class UserEntity extends AbstractEntity{
 	public void setRoleList(Set<RoleEntity> roleList) {
 		this.roleList = roleList;
 	}
+
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setBuildingList(List<BuildingEntity> buildingList) {
+		this.buildingList = buildingList;
+	}
+
+	public Set<CustomerEntity> getCustomerList() {
+		return customerList;
+	}
+
 }
