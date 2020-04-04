@@ -16,7 +16,7 @@ $(document).ready(function () {
       </td>
       <td>${user.fullname}</td>
       <td>${user.phone}</td>
-      <td>${user.role == 0 ? 'Nhân viên' : 'Quản lý'}</td>
+      <td>${user.role == 0 ? 'Nhân viên' : 'Quản trị viên'}</td>
       <td>${user.status == 0 ? 'Ngưng hoạt động' : 'Hoạt động'}</td>
       <td>
         <div class="hidden-sm hidden-xs action-buttons">
@@ -30,7 +30,6 @@ $(document).ready(function () {
   }
 
   const loadData = (url, callback) => {
-    console.log(url);
     var data = "";
 
     fetch(url)
@@ -64,9 +63,7 @@ $(document).ready(function () {
   }
 
   const fetchFirstPagination = (url, callback) => {
-    console.log(url);
     fetch(url).then(res => res.json()).then(count => {
-      console.log(count);
       userPagination(count, ITEMS_ON_PAGE, 1, callback);
       callback();
     })
@@ -104,7 +101,7 @@ $(document).ready(function () {
     let userId = id.substr(id.indexOf("_code") + 5);
     $('#assign_userId').val(userId);
     var data = "";
-    fetch('http://localhost:8080/api-server/staff/assignment?id=' + userId)
+    fetch(`${API_URL}/staff/assignment?id=${userId}`)
       .then(res => res.json())
       .then(res => {
         res.map(e => {
@@ -123,12 +120,16 @@ $(document).ready(function () {
 
   $("#dynamic-table").on("click", "button[id^='btn_update']", function () {
     $.LoadingOverlay("show");
+    
+    $('.modal-title')[0].innerHTML = "Cập nhật người dùng";
     $('#submit_save')[0].innerHTML = 'Cập nhật';
+    $('select[name="status"]').parent().show();
+    $('input[name="username"]').parent().hide();
 
     let id = $(this).attr('id');
     let userId = id.substr(id.indexOf("_code") + 5);
     $('#modal_userId').val(userId);
-    fetch('http://localhost:8080/api-server/staff?id=' + userId)
+    fetch(`${API_URL}/staff?id=${userId}`)
       .then(res => res.json())
       .then(res => {
         $('#userForm')[0].reset();
@@ -143,9 +144,12 @@ $(document).ready(function () {
 
 
   $("#btn_add_user").click(() => {
+    $('.modal-title')[0].innerHTML = "Thêm mới người dùng";
     $('#submit_save')[0].innerHTML = 'Thêm mới';
     $('#modal_userId').val('');
     $('#userForm')[0].reset();
+    $('select[name="status"]').parent().hide();
+    $('input[name="username"]').parent().show();
   })
 
 
@@ -170,7 +174,6 @@ $(document).ready(function () {
       ids.push(parseInt(id));
     }
     let data = { 'ids': ids }
-    console.log(JSON.stringify(data));
     $.confirm({
       title: false,
       content: 'Bạn có muốn thực hiện thao tác xóa!',
@@ -180,7 +183,7 @@ $(document).ready(function () {
           btnClass: 'btn-danger',
           action: () => {
             $.LoadingOverlay("show");
-            fetch('http://localhost:8080/api-server/staff', {
+            fetch(`${API_URL}/staff`, {
               method: 'DELETE',
               body: JSON.stringify(data),
               headers: {
@@ -193,7 +196,11 @@ $(document).ready(function () {
                   $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
                   $.alert('Đã xóa thành công');
                 }
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           }
 
         },
@@ -220,7 +227,7 @@ $(document).ready(function () {
           btnClass: 'btn-danger',
           action: () => {
             $.LoadingOverlay("show");
-            fetch('http://localhost:8080/api-server/staff', {
+            fetch(`${API_URL}/staff`, {
               method: 'DELETE',
               body: JSON.stringify(data),
               headers: {
@@ -233,7 +240,11 @@ $(document).ready(function () {
                   $(this).closest("tr").remove();
                   $.alert('Đã xóa thành công');
                 }
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           }
         },
         cancel: {
@@ -258,7 +269,6 @@ $(document).ready(function () {
     });
     userId = (parseInt($('#assign_userId').attr('value')));
     let data = { staffId, userId };
-    console.log(JSON.stringify(data));
 
     $.confirm({
       title: false,
@@ -269,7 +279,7 @@ $(document).ready(function () {
           btnClass: 'btn-danger',
           action: () => {
             $.LoadingOverlay("show");
-            fetch('http://localhost:8080/api-server/staff/assignment', {
+            fetch(`${API_URL}/staff/assignment`, {
               method: 'POST', // or 'PUT'
               body: JSON.stringify(data), // data can be `string` or {object}!
               headers: {
@@ -279,7 +289,11 @@ $(document).ready(function () {
               .then(res => {
                 $.LoadingOverlay("hide");
                 $.alert('Thực hiện thành công');
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           }
         },
         cancel: {
@@ -304,12 +318,8 @@ $(document).ready(function () {
       method = 'PUT';
     }
 
-    console.log($('#modal_userId')[0].value);
-    console.log(method);
     data['userType'] = type;
-    console.log(JSON.stringify(data));
-    console.log('new');
-
+    
     $.confirm({
       title: false,
       content: 'Bạn có muốn thực hiện các thay đổi!',
@@ -319,7 +329,7 @@ $(document).ready(function () {
           btnClass: 'btn-danger',
           action: () => {
             $.LoadingOverlay("show");
-            fetch('http://localhost:8080/api-server/staff', {
+            fetch(`${API_URL}/staff`, {
               method: method,
               body: JSON.stringify(data), // data can be `string` or {object}!
               headers: {
@@ -327,7 +337,6 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
-                console.log(res);
                 $('#userForm')[0].reset();
                 $('#myModal').modal('hide');
                 if (method == 'PUT') {
@@ -343,7 +352,11 @@ $(document).ready(function () {
                   });
                 }
 
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           },
         },
         cancel: {

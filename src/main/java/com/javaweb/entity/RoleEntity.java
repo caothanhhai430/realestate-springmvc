@@ -1,6 +1,7 @@
 package com.javaweb.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -10,16 +11,12 @@ public class RoleEntity extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long type;
+    private Integer type;
 
     private String description;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="user_role",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<UserEntity> userList;
-
+    @ManyToMany(mappedBy = "roleList")
+    private Set<UserEntity> userList=new HashSet<>();
 
     public Long getId() {
         return id;
@@ -29,11 +26,11 @@ public class RoleEntity extends AbstractEntity {
         this.id = id;
     }
 
-    public Long getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(Long type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 

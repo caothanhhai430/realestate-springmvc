@@ -4,6 +4,7 @@ import com.javaweb.dto.UserDTO;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.Tuple;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public interface IUserService {
 	public List<Tuple> findAssignmentByCustomerId(Long id);
 	public UserDTO findById(long id);
 	public Long save(UserDTO user);
-	public Long update(UserDTO user);
+	public Long update(UserDTO user) throws IOException;
 	public void delete(List<Long> ids);
 	public boolean delete(long id);
 	public Map<Long,String> findAll();

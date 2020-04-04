@@ -74,7 +74,6 @@ $(document).ready(function () {
   }
 
   const loadData = (url, callback) => {
-    console.log(url);
     var data = "";
     fetch(url)
       .then(res => res.json())
@@ -110,7 +109,6 @@ $(document).ready(function () {
   }
 
   const fetchFirstPagination = (url, callback) => {
-    console.log(url);
     fetch(url).then(res => res.json()).then(count => {
       customerPagination(count, ITEMS_ON_PAGE, 1, callback);
       callback();
@@ -124,7 +122,7 @@ $(document).ready(function () {
 
   const fetchData = async () => {
     $.LoadingOverlay("show");
-    if (!!currentRequestForm) currentRequestForm = $('#customer_form').serialize();
+    currentRequestForm = $('#customer_form').serialize();
     loadData(`${API_URL}/customer/list?${currentRequestForm}&page=1&size=${ITEMS_ON_PAGE}`, () => {
       fetchFirstPagination(`${API_URL}/customer/count?${currentRequestForm}&page=1&size=${ITEMS_ON_PAGE}`, hideLoading);
     });
@@ -149,7 +147,6 @@ $(document).ready(function () {
     fetch(`${API_URL}/staff/assignment-customer?id=${customerId}`)
       .then(res => res.json())
       .then(res => {
-        console.log(res);
         res.map(e => {
           data += '<tr> <td><input type="hidden" id="assignstaff_code' + e[0] + '"> <input type="checkbox"' + e[2] + ' ></td> <td>' + e[1] + '</td> </tr>';
         })
@@ -167,6 +164,7 @@ $(document).ready(function () {
   $("#dynamic-table").on("click", "button[id^='btn_update']", function () {
     $.LoadingOverlay("show");
     $('#submit_save')[0].innerHTML = 'Cập nhật';
+    $('.modal-title')[0].innerHTML = "Cập nhật Khách hàng";
 
     let id = $(this).attr('id');
     let customerId = id.substr(id.indexOf("_code") + 5);
@@ -234,8 +232,9 @@ $(document).ready(function () {
                 $.LoadingOverlay("hide");
                 $.alert('Thao tác thành công');
               })
-              .catch(e => {
-                console.log(e);
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
               })
           }
         },
@@ -320,6 +319,7 @@ $(document).ready(function () {
 
   $("#btn_add_customer").click(() => {
     $('#submit_save')[0].innerHTML = 'Thêm mới';
+    $('.modal-title')[0].innerHTML = "Thêm mới Khách hàng";
     $('#modal_customerId').val('');
     $('#customerForm')[0].reset();
   })
@@ -377,7 +377,11 @@ $(document).ready(function () {
                   $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
                   $.alert('Đã xóa thành công');
                 }
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           }
 
         },
@@ -416,7 +420,11 @@ $(document).ready(function () {
                   $(this).closest("tr").remove();
                   $.alert('Đã xóa thành công');
                 }
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           }
 
         },
@@ -462,7 +470,11 @@ $(document).ready(function () {
               .then(res => {
                 $.LoadingOverlay("hide");
                 $.alert('Thực hiện thành công');
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           }
         },
         cancel: {
@@ -488,10 +500,6 @@ $(document).ready(function () {
     if ((!!$('#modal_customerId')[0].value)) {
       method = 'PUT';
     }
-
-    console.log($('#modal_customerId')[0].value);
-    console.log(method);
-    console.log(JSON.stringify(data));
     data['customerType'] = type;
     $.confirm({
       title: false,
@@ -510,7 +518,6 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
-                console.log(res);
                 $('#customerForm')[0].reset();
                 $('#myModal').modal('hide');
                 if (method == 'PUT') {
@@ -525,7 +532,11 @@ $(document).ready(function () {
                     $.alert('Thực hiện thành công');
                   });
                 }
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           },
         },
         cancel: {

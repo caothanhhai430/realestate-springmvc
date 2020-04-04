@@ -55,7 +55,7 @@
                             aria-label="">Loại tòa nhà</th>
                         <th class="sorting" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                             aria-label="">Diện tích thuê</th>
-                        <th class="sorting" style="width: 165px;" tabindex="0" aria-controls="dynamic-table" rowspan="1"
+                        <th class="sorting" style="width: 210px;" tabindex="0" aria-controls="dynamic-table" rowspan="1"
                             colspan="1" aria-label="">Thao tác</th>
                 </thead>
 

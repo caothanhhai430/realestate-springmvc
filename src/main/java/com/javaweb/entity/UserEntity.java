@@ -1,6 +1,8 @@
 package com.javaweb.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,19 +18,26 @@ public class UserEntity extends AbstractEntity{
 	@Column
 	private Integer status;
 
+	@Column
 	private String username;
+	@Column
 	private String password;
+	@Column
 	private String avatar;
+	@Column
 	private String phone;
 
 	@ManyToMany(mappedBy = "staffList",fetch = FetchType.LAZY	)
-	List<BuildingEntity> buildingList;
+	List<BuildingEntity> buildingList=new ArrayList<>();
 
 	@ManyToMany(mappedBy = "staffList",fetch = FetchType.LAZY)
-	Set<CustomerEntity> customerList;
+	Set<CustomerEntity> customerList=new HashSet<>();
 
-	@ManyToMany(mappedBy = "userList",fetch = FetchType.LAZY)
-	Set<RoleEntity> roleList;
+	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@JoinTable(name="user_role",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
+	Set<RoleEntity> roleList = new HashSet<>();
 
 
 	public String getPhone() {

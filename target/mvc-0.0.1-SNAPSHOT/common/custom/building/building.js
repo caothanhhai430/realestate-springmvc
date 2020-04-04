@@ -48,7 +48,6 @@ $(document).ready(function () {
   }
 
   const loadData = (url, callback) => {
-    console.log(url);
     var data = "";
 
     fetch(url)
@@ -82,9 +81,7 @@ $(document).ready(function () {
   }
 
   const fetchFirstPagination = (url, callback) => {
-    console.log(url);
     fetch(url).then(res => res.json()).then(count => {
-      console.log(count);
       buildingPagination(count, ITEMS_ON_PAGE, 1, callback);
       callback();
     })
@@ -122,7 +119,7 @@ $(document).ready(function () {
     let buildingId = id.substr(id.indexOf("_code") + 5);
     $('#assign_buildingId').val(buildingId);
     var data = "";
-    fetch('http://localhost:8080/api-server/staff/assignment?id=' + buildingId)
+    fetch(`${API_URL}/staff/assignment?id=${buildingId}`)
       .then(res => res.json())
       .then(res => {
         res.map(e => {
@@ -142,11 +139,12 @@ $(document).ready(function () {
   $("#dynamic-table").on("click", "button[id^='btn_update']", function () {
     $.LoadingOverlay("show");
     $('#submit_save')[0].innerHTML = 'Cập nhật';
+    $('.modal-title')[0].innerHTML = "Cập nhật tòa nhà";
 
     let id = $(this).attr('id');
     let buildingId = id.substr(id.indexOf("_code") + 5);
     $('#modal_buildingId').val(buildingId);
-    fetch('http://localhost:8080/api-server/building?id=' + buildingId)
+    fetch(`${API_URL}/building?id=${buildingId}`)
       .then(res => res.json())
       .then(res => {
         $('#buildingForm')[0].reset();
@@ -154,13 +152,14 @@ $(document).ready(function () {
         $.LoadingOverlay("hide");
       })
       .catch(e => {
-        console.log(e);
         $.LoadingOverlay("hide");
       })
   })
 
 
   $("#btn_add_building").click(() => {
+
+    $('.modal-title')[0].innerHTML = "Cập nhật tòa nhà";
     $('#submit_save')[0].innerHTML = 'Thêm mới';
     $('#modal_buildingId').val('');
     $('#buildingForm')[0].reset();
@@ -196,7 +195,6 @@ $(document).ready(function () {
       ids.push(parseInt(id));
     }
     let data = { 'ids': ids }
-    console.log(JSON.stringify(data));
     $.confirm({
       title: false,
       content: 'Bạn có muốn thực hiện thao tác xóa!',
@@ -206,7 +204,7 @@ $(document).ready(function () {
           btnClass: 'btn-danger',
           action: () => {
             $.LoadingOverlay("show");
-            fetch('http://localhost:8080/api-server/building', {
+            fetch(`${API_URL}/building`, {
               method: 'DELETE',
               body: JSON.stringify(data),
               headers: {
@@ -219,7 +217,11 @@ $(document).ready(function () {
                   $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
                   $.alert('Đã xóa thành công');
                 }
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           }
 
         },
@@ -246,7 +248,7 @@ $(document).ready(function () {
           btnClass: 'btn-danger',
           action: () => {
             $.LoadingOverlay("show");
-            fetch('http://localhost:8080/api-server/building', {
+            fetch(`${API_URL}/building`, {
               method: 'DELETE',
               body: JSON.stringify(data),
               headers: {
@@ -259,7 +261,11 @@ $(document).ready(function () {
                   $(this).closest("tr").remove();
                   $.alert('Đã xóa thành công');
                 }
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           }
         },
         cancel: {
@@ -284,7 +290,6 @@ $(document).ready(function () {
     });
     buildingId = (parseInt($('#assign_buildingId').attr('value')));
     let data = { staffId, buildingId };
-    console.log(JSON.stringify(data));
 
     $.confirm({
       title: false,
@@ -295,7 +300,7 @@ $(document).ready(function () {
           btnClass: 'btn-danger',
           action: () => {
             $.LoadingOverlay("show");
-            fetch('http://localhost:8080/api-server/staff/assignment', {
+            fetch(`${API_URL}/staff/assignment`, {
               method: 'POST', // or 'PUT'
               body: JSON.stringify(data), // data can be `string` or {object}!
               headers: {
@@ -305,7 +310,11 @@ $(document).ready(function () {
               .then(res => {
                 $.LoadingOverlay("hide");
                 $.alert('Thực hiện thành công');
-              });
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
+              })
           }
         },
         cancel: {
@@ -330,11 +339,7 @@ $(document).ready(function () {
       method = 'PUT';
     }
 
-    console.log($('#modal_buildingId')[0].value);
-    console.log(method);
     data['buildingType'] = type;
-    console.log(JSON.stringify(data));
-    console.log('new');
 
     $.confirm({
       title: false,
@@ -345,7 +350,7 @@ $(document).ready(function () {
           btnClass: 'btn-danger',
           action: () => {
             $.LoadingOverlay("show");
-            fetch('http://localhost:8080/api-server/building', {
+            fetch(`${API_URL}/building`, {
               method: method,
               body: JSON.stringify(data), // data can be `string` or {object}!
               headers: {
@@ -353,7 +358,6 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
-                console.log(res);
                 $('#buildingForm')[0].reset();
                 $('#myModal').modal('hide');
                 if (method == 'PUT') {
@@ -366,7 +370,11 @@ $(document).ready(function () {
                   loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`, () => {
                     hideLoading();
                     $.alert('Thực hiện thành công');
-                  });
+                  })
+                  .catch(e=>{
+                    $.LoadingOverlay("hide");
+                    $.alert('Thất bại');
+                  })
                 }
 
               });

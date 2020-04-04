@@ -1,5 +1,7 @@
 package com.javaweb.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaweb.dto.MyUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,4 +26,14 @@ public class SecurityUtils {
 		return results;
 	}
 
+	public static String getPrincipalAsJson(){
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			String json = objectMapper.writeValueAsString(getPrincipal());
+			return json;
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
 }

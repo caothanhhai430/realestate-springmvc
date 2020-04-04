@@ -26,7 +26,7 @@
 
 							<select class="form-control z-field" name="role">
 								<option value="0">Nhân viên</option>
-								<option value="1">Quản lý</option>
+								<option value="1">Quản trị viên</option>
 							</select>
 						</div>
 

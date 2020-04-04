@@ -51,6 +51,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
             <version>3.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.25.0</version>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.jboss.weld.servlet/weld-servlet -->
 

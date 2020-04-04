@@ -43,7 +43,7 @@ public class UserRepositoryCustomImpl  implements UserRepositoryCustom {
 		return results;
 	}
 	public List<UserEntity> findAll(UserSearchBuilder builder, Pageable pageable){
-		String qlString = "select user from UserEntity user " + buildQuery(builder);
+		String qlString = "select u from UserEntity u " + buildQuery(builder,"u");
 		if(pageable==null){
 			pageable = PageRequest.of(1,10);
 		}
@@ -59,14 +59,14 @@ public class UserRepositoryCustomImpl  implements UserRepositoryCustom {
 
 	@Override
 	public long count(UserSearchBuilder builder) {
-		String qlString = "select count(user) from UserEntity user " + buildQuery(builder);
+		String qlString = "select count(u) from UserEntity u " + buildQuery(builder,"u");
 		Long count = (Long) em.createQuery(qlString).getSingleResult();
 		return count.longValue();
 	}
 
-	private String buildQuery(UserSearchBuilder builder){
+	private String buildQuery(UserSearchBuilder builder,String prefix){
 		Map<String,Object> map = ObjectToMap.toMap(builder);
-		String where = MapToSqlSearch.toSql(map);
+		String where = MapToSqlSearch.toSql(map,prefix);
 
 		String qlString =  " where 1=1 ";
 		if(!where.isEmpty()){

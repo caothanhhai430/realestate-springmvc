@@ -26,7 +26,7 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 
 
 	public List<BuildingEntity> findAll(BuildingSearchBuilder builder, Pageable pageable){
-		String qlString = "select building from BuildingEntity building " + buildQuery(builder);
+		String qlString = "select b from BuildingEntity b " + buildQuery(builder,"b");
 		if(pageable==null){
 			pageable = PageRequest.of(1,10);
 		}
@@ -42,12 +42,12 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 
 	@Override
 	public long count(BuildingSearchBuilder builder) {
-		String qlString = "select count(building) from BuildingEntity building " + buildQuery(builder);
+		String qlString = "select count(b) from BuildingEntity b " + buildQuery(builder,"b");
 		Long count = (Long) em.createQuery(qlString).getSingleResult();
 		return count.longValue();
 	}
 
-	private String buildQuery(BuildingSearchBuilder builder){
+	private String buildQuery(BuildingSearchBuilder builder, String prefix){
 		String specialSQL = getSpecialQLString(builder);
 		BuildingSearchBuilder singleFieldBuilder = new BuildingSearchBuilder.Builder()
 				.setName(builder.getName())
@@ -58,10 +58,10 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 				.setStreet(builder.getStreet())
 				.build();
 		Map<String,Object> map = ObjectToMap.toMap(singleFieldBuilder);
-		String where = MapToSqlSearch.toSql(map);
+		String where = MapToSqlSearch.toSql(map,prefix);
 
 		String qlString = "";
-		if(builder.getStaffId()!=null) qlString += " inner join building.staffList staff";
+		if(builder.getStaffId()!=null) qlString += " inner join b.staffList staff";
 		qlString +=  "  where 1=1 ";
 		if(!where.isEmpty() || !specialSQL.isEmpty()){
 			qlString = qlString+   where + " " + specialSQL;
@@ -72,7 +72,7 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 
 	private String getSpecialQLString(BuildingSearchBuilder builder) {
 		StringBuilder sql = new StringBuilder();
-		String prefix = "building.";
+		String prefix = "b.";
 		if(builder.getRentCostFrom()!=null) {
 			sql.append(" AND " + prefix + "rentCost >="+builder.getRentCostFrom());
 		}

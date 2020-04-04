@@ -45,12 +45,19 @@
 
                     <div class="form-group">
                         <div class="col-sm-4">
-                            <label for="form-field-8">Nhân viên vụ trách</label>
+                            <sec:authorize access="hasAuthority('ADMIN')">
+                                <label for="form-field-8">Nhân viên vụ trách</label>
 
-                            <form:select class="form-control" path="staffId" >
-                                <form:option value="" label="--- Select ---" />
-                                <form:options items="${staffMap}" />
-                            </form:select>
+                                <form:select class="form-control" path="staffId">
+                                    <form:option value="" label="--- Select ---" />
+                                    <form:options items="${staffMap}" />
+                                </form:select>
+                            </sec:authorize>
+                            <sec:authorize access="hasAuthority('STAFF')">
+                                <input type="hidden" class="form-control" name="staffId" value=<sec:authentication
+                                    property="principal.id" />>
+                            </sec:authorize>
+
                         </div>
 
                     </div>

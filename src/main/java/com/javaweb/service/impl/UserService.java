@@ -1,5 +1,6 @@
 package com.javaweb.service.impl;
 
+import com.cloudinary.utils.ObjectUtils;
 import com.javaweb.builder.UserSearchBuilder;
 import com.javaweb.converter.DTOConverter;
 import com.javaweb.dto.UserDTO;
@@ -9,19 +10,20 @@ import com.javaweb.entity.RoleEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.CustomerRepository;
+import com.javaweb.repository.RoleRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IUserService;
+import com.javaweb.utils.CloudinaryUtils;
 import com.javaweb.utils.Constant;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Tuple;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +36,16 @@ public class UserService implements IUserService{
 	private BuildingRepository buildingRepository;
 	@Autowired
 	private CustomerRepository customerRepository;
-	
+
+	@Autowired
+	private RoleRepository roleRepository;
+
+
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
+
+
 	@Override
 	public List<UserDTO> findAll(UserDTO dto, Pageable pageable) {
 		UserSearchBuilder builder = DTOConverter.toModel(dto,UserSearchBuilder.Builder.class).build();
@@ -130,24 +141,40 @@ public class UserService implements IUserService{
 	@Override
 	public Long save(UserDTO user) {
 		UserEntity entity = DTOConverter.toModel(user,UserEntity.class);
-		return repository.save(entity).getId();
+		entity.setPassword(passwordEncoder.encode(user.getPassword()));
+		UserEntity userEntity = repository.save(entity);
+		RoleEntity roleEntity = roleRepository.findOneByType(user.getRole());
+		roleEntity.getUserList().add(userEntity);
+		userEntity.getRoleList().add(roleEntity);
+		return repository.save(userEntity).getId();
 	}
 
 	@Override
-	public Long update(UserDTO user) {
+	public Long update(UserDTO user) throws IOException {
 		UserEntity entity = repository.findById(user.getId()).get();
 		if(StringUtils.isNotBlank(user.getFullname())) entity.setFullname(user.getFullname());
 		if(user.getStatus()!=null) entity.setStatus(user.getStatus());
-		if(StringUtils.isNotBlank(user.getAvatar()))entity.setAvatar(user.getAvatar());
 		if(StringUtils.isNotBlank(user.getPhone())) entity.setPhone(user.getPhone());
-		if(StringUtils.isNotBlank(user.getPassword())) entity.setPhone(user.getPassword());
+		if(StringUtils.isNotBlank(user.getPassword()))
+			entity.setPassword(passwordEncoder.encode(user.getPassword()));
 
-		RoleEntity role = new RoleEntity();
-		HashSet<RoleEntity> roleSet = new HashSet<>();
-		if(user.getRole()!=null) {
-			role.setType(user.getRole());
-			roleSet.add(role);
-			entity.setRoleList(roleSet);
+		RoleEntity role = null;
+		try{
+			role = entity.getRoleList().iterator().next();
+			if(role.getType()!=user.getRole() && user.getRole()!=null){
+				role = roleRepository.findOneByType(user.getRole());
+			}
+		}catch (Exception e){
+			role = roleRepository.findOneByType(Constant.STAFF_ROLE);
+		}finally {
+			entity.getRoleList().clear();
+			role.getUserList().add(entity);
+			entity.getRoleList().add(role);
+		}
+
+		if(StringUtils.isNotBlank(user.getAvatar())) {
+			String url = (String) CloudinaryUtils.getCloudinary().uploader().upload(user.getAvatar(), ObjectUtils.emptyMap()).get("url");
+			entity.setAvatar(url);
 		}
 		repository.save(entity);
 		return user.getId();

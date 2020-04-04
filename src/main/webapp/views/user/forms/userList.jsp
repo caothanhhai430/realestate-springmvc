@@ -45,7 +45,7 @@
                             aria-label="">vai trò</th>
                         <th class="sorting" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                             aria-label="">trạng thái</th>
-                        <th class="sorting" style="width: 165px;" tabindex="0" aria-controls="dynamic-table" rowspan="1"
+                        <th class="sorting" style="width: 210px;" tabindex="0" aria-controls="dynamic-table" rowspan="1"
                             colspan="1" aria-label="">Thao tác</th>
                 </thead>
 

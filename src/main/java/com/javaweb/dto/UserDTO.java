@@ -5,7 +5,7 @@ public class UserDTO extends AbstractDTO{
 	private Long id;
 	private String fullname;
 	private Integer status;
-	private Long role;
+	private Integer role;
 	private Integer buildingId;
 	private String avatar;
 	private String phone;
@@ -51,14 +51,22 @@ public class UserDTO extends AbstractDTO{
 		this.avatar = avatar;
 	}
 
-	public Long getRole() {
+	public Integer getRole() {
 		return role;
 	}
 
 	public void setRole(Object role)
 	{
-		if(role instanceof Long)
-		this.role = (Long)role;
+		if(role instanceof Number)
+			this.role = (Integer) role;
+		if(role instanceof String){
+			try {
+				Integer t = Integer.parseInt((String) role);
+				this.role = t;
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public Long getId() {

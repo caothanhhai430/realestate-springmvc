@@ -1,40 +1,32 @@
 package com.javaweb.entity;
 
-import java.util.List;
-import java.util.Set;
-
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
 @Table(name="customer")
 public class CustomerEntity extends AbstractEntity{
 	
-	@Column(name="id")
+	@Column
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name="name")
+	@Column
 	private String name;
-
-	@Column(name="phone")
+	@Column
 	private String phone;
-
-
-	@Column(name="email")
+	@Column
 	private String email;
-	
-	@Column(name="company")
+	@Column
 	private String company;
-
-	@Column(name="demand")
+	@Column
 	private String demand;
-
-	@Column(name="status")
+	@Column
 	private Byte status;
-	
-	@Column(name="note")
+	@Column
 	private String note;
 
 	@ManyToMany(fetch = FetchType.LAZY,cascade={CascadeType.ALL})
@@ -42,13 +34,13 @@ public class CustomerEntity extends AbstractEntity{
 			name = "staff_customer",
 			joinColumns = @JoinColumn(name = "customerid"),
 			inverseJoinColumns = @JoinColumn(name = "staffid"))
-	Set<UserEntity> staffList;
+	Set<UserEntity> staffList=new HashSet<>();
 
 	@OneToMany(mappedBy="customer",
-			fetch = FetchType.EAGER,
+			fetch = FetchType.LAZY,
 			cascade = CascadeType.ALL,
 			orphanRemoval = true)
-	private Set<TransactionEntity> transactionList;
+	private Set<TransactionEntity> transactionList=new HashSet<>();
 
 	public void setTransactionList(Set<TransactionEntity> transactionList) {
 		this.transactionList = transactionList;

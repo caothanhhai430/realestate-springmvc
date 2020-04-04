@@ -1,12 +1,8 @@
 package com.javaweb.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
-import java.util.Set;
-
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="building")
@@ -91,7 +87,7 @@ public class BuildingEntity extends AbstractEntity{
 			  name = "assignmentstaff",
 			  joinColumns = @JoinColumn(name = "buildingid"),
 			  inverseJoinColumns = @JoinColumn(name = "staffid"))
-	Set<UserEntity> staffList;
+	Set<UserEntity> staffList=new HashSet<>();
 
 	public void setStaffList(Set<UserEntity> staffList) {
 		this.staffList = staffList;
