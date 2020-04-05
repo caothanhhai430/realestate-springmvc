@@ -21,37 +21,35 @@
 
 
             <div class="widget-main">
-                <form:form id="customer_form" modelAttribute="customerRequest" method="GET">
-
-
+                <form id="customer_form"  method="GET">
                     <div class="form-group">
                         <div class="col-sm-4">
                             <label for="form-field-8">Tên khách hàng</label>
 
-                            <form:input class="form-control" path="name" />
+                            <input class="form-control" name="name" />
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">Di động</label>
 
-                            <form:input class="form-control" path="phone" />
+                            <input class="form-control" name="phone" />
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">Email</label>
 
-                            <form:input class="form-control" path="email" />
+                            <input class="form-control" name="email" />
                         </div>
-
                     </div>
-
                     <div class="form-group">
                         <div class="col-sm-4">
                             <sec:authorize access="hasAuthority('ADMIN')">
                                 <label for="form-field-8">Nhân viên vụ trách</label>
 
-                                <form:select class="form-control" path="staffId">
-                                    <form:option value="" label="--- Select ---" />
-                                    <form:options items="${staffMap}" />
-                                </form:select>
+                                <select class="form-control" name="staffId">
+                                    <option value="">--- Select ---</option>
+                                    <c:forEach var="item" items="${staffMap}">
+                                        <option value="${item.id}">${item.fullname}</option>
+                                    </c:forEach>
+                                    <select>
                             </sec:authorize>
                             <sec:authorize access="hasAuthority('STAFF')">
                                 <input type="hidden" class="form-control" name="staffId" value=<sec:authentication
@@ -72,7 +70,7 @@
                     </button>
 
 
-                </form:form>
+                </form>
             </div>
 
         </div>

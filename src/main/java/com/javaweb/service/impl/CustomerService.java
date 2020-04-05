@@ -9,7 +9,9 @@ import com.javaweb.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,39 +51,24 @@ public class CustomerService implements ICustomerService{
 		return dto;
 	}
 
-
-//	@Override
-//	public Long save(CustomerDTO customer) {
-//		CustomerRepository repository = new CustomerRepository();
-//		
-//		CustomerEntity entity = DTOConverter.toModel(customer, CustomerEntity.class);
-//		long id = repository.save(entity);
-//		String rentAreaArr[] = customer.getRentArea().replaceAll("\\s+","").split(",");
-//		List<Integer> list = Arrays.stream(rentAreaArr).filter(e -> StringUtils.isNotBlank(e)).map(e -> Integer.parseInt(e)).collect(Collectors.toList());
-//
-//		RentAreaRepository rentAreaRepository = new RentAreaRepository();
-//		RentArea rentArea = new RentArea();
-//		rentArea.setCustomerId((int)id);
-//		list.stream().forEach(e-> {
-//				rentArea.setValue(e);
-//				rentAreaRepository.save(rentArea);
-//			});
-//		return id;
-//	}
-//
+	@Transactional
+	@Override
 	public Long update(CustomerDTO customer) {
 		CustomerEntity entity = DTOConverter.toModel(customer, CustomerEntity.class);
 		CustomerEntity existEntity = repository.findById(customer.getId()).get();
 		entity.setStaffList(existEntity.getStaffList());
 		entity.setTransactionList(existEntity.getTransactionList());
+		entity.setCreatedBy(existEntity.getCreatedBy());
+		entity.setCreatedDate(existEntity.getCreatedDate());
 		repository.save(entity);
 		return entity.getId();
 	}
 
 	@Override
+	@Transactional
 	public boolean delete(Long id) {
 		try{
-			repository.deleteById(id);
+			delete(Arrays.asList(id));
 			return true;
 		}catch (Exception e){
 			return false;
@@ -89,6 +76,7 @@ public class CustomerService implements ICustomerService{
 	}
 
 	@Override
+	@Transactional
 	public boolean delete(List<Long> ids) {
 		try{
 			List<CustomerEntity> list = repository.findAllById(ids);
@@ -108,6 +96,7 @@ public class CustomerService implements ICustomerService{
 	}
 
 	@Override
+	@Transactional
 	public Long save(CustomerDTO customer) {
 		CustomerEntity entity = DTOConverter.toModel(customer, CustomerEntity.class);
 		repository.save(entity);

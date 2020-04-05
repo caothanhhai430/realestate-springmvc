@@ -27,7 +27,7 @@ public class UserEntity extends AbstractEntity{
 	@Column
 	private String phone;
 
-	@ManyToMany(mappedBy = "staffList",fetch = FetchType.LAZY	)
+	@ManyToMany(mappedBy = "staffList",fetch = FetchType.LAZY)
 	List<BuildingEntity> buildingList=new ArrayList<>();
 
 	@ManyToMany(mappedBy = "staffList",fetch = FetchType.LAZY)

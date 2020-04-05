@@ -8,6 +8,7 @@ import com.javaweb.service.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,6 +53,7 @@ public class TransactionService implements ITransactionService{
 	}
 
 	@Override
+	@Transactional
 	public Long save(TransactionDTO transaction) {
 		TransactionEntity entity = DTOConverter.toModel(transaction, TransactionEntity.class);
 		repository.save(entity);

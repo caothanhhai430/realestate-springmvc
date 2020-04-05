@@ -29,7 +29,7 @@ public class CustomerEntity extends AbstractEntity{
 	@Column
 	private String note;
 
-	@ManyToMany(fetch = FetchType.LAZY,cascade={CascadeType.ALL})
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 			name = "staff_customer",
 			joinColumns = @JoinColumn(name = "customerid"),

@@ -12,4 +12,5 @@ public interface UserRepositoryCustom {
     List<Tuple> findStaffByCustomerId(Long id);
     List<UserEntity> findAll(UserSearchBuilder builder, Pageable pageable);
     long count(UserSearchBuilder builder);
+    List<Tuple> findAllActiveStaff();
 }

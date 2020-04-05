@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Tuple;
+import javax.persistence.TupleElement;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -113,10 +114,12 @@ public class UserAPI{
 	protected List<Object> findAllAssignCustomer(@RequestParam Long id){
 
 		List<Tuple> data =  service.findAssignmentByCustomerId(id);
+		Tuple a = data.get(0);
+		TupleElement x = a.getElements().get(0);
+		Object object = a.get(x.getAlias());
 		List<Object> results = data.parallelStream().map(e -> e.toArray()).collect(Collectors.toList());
 		return results;
 	}
-
 
 	@PostMapping
 	protected UserDTO newuser(@ModelAttribute UserDTO user){
@@ -124,13 +127,5 @@ public class UserAPI{
 		UserDTO resp = service.findById(id);
 		return resp;
 	}
-//
-//	@PutMapping
-//	public UserDTO update(@ModelAttribute UserDTO user){
-//		Long id = service.update(user);
-//		UserDTO resp = service.findById(id);
-//		return resp;
-//	}
-
 
 }

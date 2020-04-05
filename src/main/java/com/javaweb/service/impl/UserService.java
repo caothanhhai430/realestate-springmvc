@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Tuple;
 import java.io.IOException;
@@ -69,6 +70,8 @@ public class UserService implements IUserService{
 		return result;
 	}
 
+	@Transactional
+	@Override
 	public boolean assign(List<Long> staffId,  Long buildingId){
 		try {
 			BuildingEntity buildingEntity = buildingRepository.findById(buildingId).get();
@@ -81,7 +84,8 @@ public class UserService implements IUserService{
 		return true;
 	}
 
-
+	@Transactional
+	@Override
 	public boolean assignCustomer(List<Long> staffId,  Long customerId){
 		try {
 			CustomerEntity customerEntity = customerRepository.findById(customerId).get();
@@ -100,6 +104,7 @@ public class UserService implements IUserService{
 		return repository.count(builder);
 	}
 
+	@Transactional
 	@Override
 	public long lockUser(long id) {
 		UserEntity user = repository.findById(id).get();
@@ -120,6 +125,20 @@ public class UserService implements IUserService{
 		return list;
 	}
 
+	@Override
+	public List<Map<String,Object>> findAllActiveStaff() {
+		List<Tuple> list = repository.findAllActiveStaff();
+		List<Map<String,Object>> mapList = new ArrayList<Map<String, Object>>() ;
+		list.stream().forEach(e->{
+			Map<String,Object> map = new HashMap<>();
+			e.getElements().parallelStream().forEach(k->{
+				map.put(k.getAlias(),e.get(k.getAlias()));
+			});
+			mapList.add(map);
+		});
+		return mapList;
+	}
+
 
 	@Override
 	public UserDTO findById(long id) {
@@ -138,6 +157,7 @@ public class UserService implements IUserService{
 		return user;
 	}
 
+	@Transactional
 	@Override
 	public Long save(UserDTO user) {
 		UserEntity entity = DTOConverter.toModel(user,UserEntity.class);
@@ -149,6 +169,7 @@ public class UserService implements IUserService{
 		return repository.save(userEntity).getId();
 	}
 
+	@Transactional
 	@Override
 	public Long update(UserDTO user) throws IOException {
 		UserEntity entity = repository.findById(user.getId()).get();
@@ -180,11 +201,14 @@ public class UserService implements IUserService{
 		return user.getId();
 	}
 
+	@Transactional
 	@Override
 	public void delete(List<Long> ids) {
+
 		List<UserEntity> list = repository.findAllById(ids);
 	}
 
+	@Transactional
 	@Override
 	public boolean delete(long id) {
 		try{

@@ -1,20 +1,22 @@
 package com.javaweb.service.impl;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
 import com.javaweb.builder.BuildingSearchBuilder;
-import com.javaweb.entity.RentAreaEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import com.javaweb.converter.DTOConverter;
 import com.javaweb.dto.BuildingDTO;
 import com.javaweb.entity.BuildingEntity;
+import com.javaweb.entity.RentAreaEntity;
 import com.javaweb.repository.BuildingRepository;
 import com.javaweb.service.IBuildingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BuildingService implements IBuildingService{
@@ -52,32 +54,16 @@ public class BuildingService implements IBuildingService{
 		return dto;
 	}
 
-
-//	@Override
-//	public Long save(BuildingDTO building) {
-//		BuildingRepository repository = new BuildingRepository();
-//		
-//		BuildingEntity entity = DTOConverter.toModel(building, BuildingEntity.class);
-//		long id = repository.save(entity);
-//		String rentAreaArr[] = building.getRentArea().replaceAll("\\s+","").split(",");
-//		List<Integer> list = Arrays.stream(rentAreaArr).filter(e -> StringUtils.isNotBlank(e)).map(e -> Integer.parseInt(e)).collect(Collectors.toList());
-//
-//		RentAreaRepository rentAreaRepository = new RentAreaRepository();
-//		RentArea rentArea = new RentArea();
-//		rentArea.setBuildingId((int)id);
-//		list.stream().forEach(e-> {
-//				rentArea.setValue(e);
-//				rentAreaRepository.save(rentArea);
-//			});
-//		return id;
-//	}
-//
+	@Transactional
 	public Long update(BuildingDTO building) {
 		BuildingEntity oldBuildingEntity = repository.findById(building.getId()).get();
 		BuildingEntity entity = DTOConverter.toModel(building, BuildingEntity.class);
 		entity.setType(building.getBuildingTypeString());
 		entity.setStaffList(oldBuildingEntity.getStaffList());
 		entity.setId(oldBuildingEntity.getId());
+		entity.setCreatedBy(oldBuildingEntity.getCreatedBy());
+		entity.setCreatedDate(oldBuildingEntity.getCreatedDate());
+
 
 		String[] s = building.getRentArea().replaceAll("\\s+", "").split(",");
 		Set<RentAreaEntity> rentAreaEntityList = new HashSet<>();
@@ -93,16 +79,18 @@ public class BuildingService implements IBuildingService{
 		return entity.getId();
 	}
 
+	@Transactional
 	@Override
 	public boolean delete(Long id) {
 		try{
-			repository.deleteById(id);
+			delete(Arrays.asList(id));
 			return true;
 		}catch (Exception e){
 			return false;
 		}
 	}
 
+	@Transactional
 	@Override
 	public boolean delete(List<Long> ids) {
 		try{
@@ -113,15 +101,16 @@ public class BuildingService implements IBuildingService{
 			e.printStackTrace();
 			return false;
 		}
-
 	}
 
+	@Transactional
 	@Override
 	public long count(BuildingDTO dto) {
 		BuildingSearchBuilder builder = DTOConverter.toModel(dto,BuildingSearchBuilder.Builder.class).build();
 		return repository.count(builder);
 	}
 
+	@Transactional
 	@Override
 	public Long save(BuildingDTO building) {
 

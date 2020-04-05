@@ -26,8 +26,11 @@ public class UserRepositoryCustomImpl  implements UserRepositoryCustom {
 	@Override
 	public List<Tuple> findStaffByBuildingId(Long id) {
 		Query query = em.createNativeQuery("select u.id,u.fullname,IF(buildingid is not null,'checked','')" +
-				" as checked from user u left join (select * from assignmentstaff where buildingid=?1) assign" +
-				" on u.id=assign.staffid order by id",Tuple.class);
+				" as checked from user u left join (select * from assignmentstaff where buildingid=?1) assign " +
+				" on u.id=assign.staffid  " +
+				"inner join (select * from user_role ur inner join role r on ur.role_id=r.id" +
+				"  where type=0) role on u.id=role.user_id "+
+				" where u.status = 1 order by u.id",Tuple.class);
 		query.setParameter(1,id);
 
 		List<Tuple> results = query.getResultList();
@@ -37,7 +40,10 @@ public class UserRepositoryCustomImpl  implements UserRepositoryCustom {
 	public List<Tuple> findStaffByCustomerId(Long id) {
 		Query query = em.createNativeQuery("select u.id,u.fullname,IF(customerid is not null,'checked','')" +
 				" as checked from user u left join (select * from staff_customer where customerid=?1) assign" +
-				" on u.id=assign.staffid order by id",Tuple.class);
+				" on u.id=assign.staffid " +
+				" inner join (select * from user_role ur inner join role r " +
+				"on ur.role_id=r.id  where type=0) role on u.id=role.user_id" +
+				" where u.status = 1 order by id",Tuple.class);
 		query.setParameter(1,id);
 		List<Tuple> results = query.getResultList();
 		return results;
@@ -62,6 +68,15 @@ public class UserRepositoryCustomImpl  implements UserRepositoryCustom {
 		String qlString = "select count(u) from UserEntity u " + buildQuery(builder,"u");
 		Long count = (Long) em.createQuery(qlString).getSingleResult();
 		return count.longValue();
+	}
+
+	@Override
+	public List<Tuple> findAllActiveStaff() {
+		Query query = em.createNativeQuery("select u.id,u.fullname from user u	inner join " +
+				"(select * from user_role ur inner join role r on ur.role_id=r.id  " +
+				"where type=0) role on u.id=role.user_id where u.status=1 order by id",Tuple.class);
+				List<Tuple> results = query.getResultList();
+		return results;
 	}
 
 	private String buildQuery(UserSearchBuilder builder,String prefix){

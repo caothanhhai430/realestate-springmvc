@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container-profile">
         <div class="view-account">
             <section class="module">
                 <div class="module-inner">

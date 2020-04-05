@@ -77,7 +77,7 @@ public class BuildingDTO extends AbstractDTO{
 		if(rentAreaList==null || rentAreaList.size()==0) return  "";
 
 		return rentAreaList.stream()
-				.map(e-> e.getValue().toString()).collect(Collectors.joining(","));
+				.map(e-> e.getValue().toString()).sorted().collect(Collectors.joining(","));
 
 	}
 

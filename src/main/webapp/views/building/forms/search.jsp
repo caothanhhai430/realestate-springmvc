@@ -21,24 +21,24 @@
 
 
             <div class="widget-main">
-                <form:form id="building_form" modelAttribute="buildingRequest" method="GET">
+                <form id="building_form" method="GET">
 
 
                     <div class="form-group row">
                         <div class="col-sm-4">
                             <label for="form-field-8">Tên tòa nhà</label>
 
-                            <form:input class="form-control" path="name" />
+                            <input class="form-control" name="name" />
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">Diện tích sàn</label>
 
-                            <form:input class="form-control" path="buildingArea" />
+                            <input class="form-control" name="buildingArea" />
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">Số tầng hầm</label>
 
-                            <form:input class="form-control" path="numberOfBasement" />
+                            <input class="form-control" name="numberOfBasement" />
                         </div>
 
                     </div>
@@ -46,20 +46,23 @@
                         <div class="col-sm-4">
                             <label for="form-field-8">Quận,Huyện</label>
 
-                            <form:select class="form-control" path="district">
-                                <form:option value="" label="--- Select ---" />
-                                <form:options items="${districtsMap}" />
-                            </form:select>
+
+                            <select class="form-control" name="district">
+                                <option value="">--- Select ---</option>
+                                <c:forEach var="item" items="${districtsMap}">
+                                    <option value="${item.key}">${item.value}</option>
+                                </c:forEach>
+                                <select>
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">Phường</label>
 
-                            <form:input class="form-control" path="ward" />
+                            <input class="form-control" name="ward" />
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">Đường</label>
 
-                            <form:input class="form-control" path="street" />
+                            <input class="form-control" name="street" />
                         </div>
 
                     </div>
@@ -68,22 +71,22 @@
                         <div class="col-sm-3">
                             <label for="form-field-8">Diện tích từ</label>
 
-                            <form:input class="form-control" path="rentAreaFrom" />
+                            <input class="form-control" name="rentAreaFrom" />
                         </div>
                         <div class="col-sm-3">
                             <label for="form-field-8">Diện tích đến</label>
 
-                            <form:input class="form-control" path="rentAreaTo" />
+                            <input class="form-control" name="rentAreaTo" />
                         </div>
                         <div class="col-sm-3">
                             <label for="form-field-8">Giá thuê từ</label>
 
-                            <form:input class="form-control" path="rentCostFrom" />
+                            <input class="form-control" name="rentCostFrom" />
                         </div>
                         <div class="col-sm-3">
                             <label for="form-field-8">Giá thuê đến</label>
 
-                            <form:input class="form-control" path="rentCostTo" />
+                            <input class="form-control" name="rentCostTo" />
                         </div>
 
                     </div>
@@ -92,21 +95,24 @@
                         <div class="col-sm-4">
                             <label for="form-field-8">Tên quản lý</label>
 
-                            <form:input class="form-control" path="managerName" />
+                            <input class="form-control" name="managerName" />
                         </div>
                         <div class="col-sm-4">
                             <label for="form-field-8">SĐT quản lý</label>
 
-                            <form:input class="form-control" path="managerPhone" />
+                            <input class="form-control" name="managerPhone" />
                         </div>
                         <div class="col-sm-4">
                             <sec:authorize access="hasAuthority('ADMIN')">
-                                <label for="form-field-8">Nhân viên vụ trách</label>
 
-                                <form:select class="form-control" path="staffId">
-                                    <form:option value="" label="--- Select ---" />
-                                    <form:options items="${staffMap}" />
-                                </form:select>
+                                <label for="form-field-8">Nhân viên vụ trách</label>
+                                <select class="form-control" name="staffId">
+                                    <option value="">--- Select ---</option>
+                                    <c:forEach var="item" items="${staffMap}">
+                                        <option value="${item.id}">${item.fullname}</option>
+                                    </c:forEach>
+                                    <select>
+
                             </sec:authorize>
                             <sec:authorize access="hasAuthority('STAFF')">
                                 <input type="hidden" class="form-control" name="staffId" value=<sec:authentication
@@ -120,9 +126,9 @@
                     <div class="form-group row">
 
                         <div class="col-sm-8">
-                            <form:checkbox path="buildingType" value="NOI_THAT" /> Nội thất
-                            <form:checkbox path="buildingType" value="TANG_TRET" /> Tầng trệt
-                            <form:checkbox path="buildingType" value="NGUYEN_CAN" /> Nguyên căn
+                            <c:forEach var="item" items="${buildingTypesMap}">
+                                <input class="z-field" type="checkbox" name="buildingType" value="${item.key}" /> ${item.value}
+                            </c:forEach>
                         </div>
                     </div>
 
@@ -134,7 +140,7 @@
                     </button>
 
 
-                </form:form>
+                </form>
             </div>
 
         </div>

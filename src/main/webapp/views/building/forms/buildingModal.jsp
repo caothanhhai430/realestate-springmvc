@@ -37,7 +37,7 @@
 							<label for="form-field-8">Quận,Huyện</label>
 
 							<select class="form-control z-field" name="district">
-								<option value=""></option>
+								<option value="">--- Select ---</option>
 								<c:forEach items="${districtsMap}" var="district">
 									<option value="${district.key}">${district.value}</option>
 								</c:forEach>
@@ -167,9 +167,9 @@
 					<div class="form-group building-type-checkbox">
 
 						<div class="col-sm-12">
-							<input class="z-field" type="checkbox" name="buildingType" value="NOI_THAT" /> Nội thất
-							<input class="z-field" type="checkbox" name="buildingType" value="TANG_TRET" /> Tầng trệt
-							<input class="z-field" type="checkbox" name="buildingType" value="NGUYEN_CAN" /> Nguyên căn
+                            <c:forEach var="item" items="${buildingTypesMap}">
+                                <input class="z-field" type="checkbox" name="buildingType" value="${item.key}" /> ${item.value}
+                            </c:forEach>
 						</div>
 					</div>
 

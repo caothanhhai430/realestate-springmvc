@@ -55,7 +55,7 @@
                             aria-label="">Ngày nhập</th>
                         <th class="sorting" tabindex="0" aria-controls="dynamic-table" rowspan="1" colspan="1"
                             aria-label="">Tình trạng</th>
-                        <th class="sorting" style="width: 210px;" tabindex="0" aria-controls="dynamic-table" rowspan="1"
+                        <th class="sorting" style="width: 250px;" tabindex="0" aria-controls="dynamic-table" rowspan="1"
                             colspan="1" aria-label="">Thao tác</th>
                     </tr>
                 </thead>

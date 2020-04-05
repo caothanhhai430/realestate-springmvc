@@ -1,19 +1,22 @@
 package com.javaweb.utils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.javaweb.enums.BuildingTypeEnum;
 import com.javaweb.enums.DistrictEnum;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class EnumUtils{
 	public static Map<String,String> getBuildingTypes(){
 		Map<String,String> buildingTypes = new HashMap<>();
-		
 		for(BuildingTypeEnum key : BuildingTypeEnum.values()) {
 			buildingTypes.put(key.name(),key.getBuildingType());
 		}
-		return buildingTypes;
+
+		//sorted
+		Map<String, String> treeMap = new TreeMap<>(buildingTypes);
+		return treeMap;
 	}
 	
 	public static Map<String,String> getDistricts(){
@@ -22,7 +25,10 @@ public class EnumUtils{
 		for(DistrictEnum key : DistrictEnum.values()) {
 			districts.put(key.name(),key.getDistrictName());
 		}
-		return districts;
+
+		//sorted
+		Map<String, String> treeMap = new TreeMap<>(districts);
+		return treeMap;
 	}
 	
 	

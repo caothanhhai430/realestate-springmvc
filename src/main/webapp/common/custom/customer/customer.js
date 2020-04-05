@@ -1,7 +1,7 @@
 const API_URL = `${CONST_HOST_URL}/api-server`;
 const role = CONST_ROLE;
 var currentRequestForm = "";
-var ITEMS_ON_PAGE = 5;
+var ITEMS_ON_PAGE = 10;
 var currentCareLoadMoreIndex = 1;
 var currentTourLoadMoreIndex = 1;
 
@@ -20,9 +20,9 @@ $(document).ready(function () {
     <td>${customer.phone}</td>
     <td>${customer.email}</td>
     <td>${customer.demand}</td>
-    <td></td>
-    <td></td>
-    <td></td>
+    <td>${customer.createdBy}</td>
+    <td>${timeConverter(customer.createdDate)}</td>
+    <td>Đang xử lý</td>
     <td>
     <div class="hidden-sm hidden-xs action-buttons">
 
@@ -38,6 +38,11 @@ $(document).ready(function () {
     class="btn_update ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
       <i class="ace-icon fa fa-pencil bigger-130"></i></span></button>
 
+      <button id='btn_care_code${customer.id}' data-toggle="modal" data-target="#transactionModal"
+    class="btn_update ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
+      <i class="ace-icon fa fa-users bigger-130"></i></span></button>
+
+
       ${role.includes('ADMIN') ? 
   `<button id="btn_delete_code${customer.id}"
     class="btn_delete ColVis_Button ColVis_MasterButton btn btn-white btn-info btn-bold"><span>
@@ -52,6 +57,7 @@ $(document).ready(function () {
 
 
   function timeConverter(UNIX_timestamp) {
+    if(!!!UNIX_timestamp) return '';
     var a = new Date(UNIX_timestamp);
     // var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var year = a.getFullYear();
@@ -60,7 +66,8 @@ $(document).ready(function () {
     var hour = a.getHours();
     var min = a.getMinutes();
     var sec = a.getSeconds();
-    var time = hour + ':' + min + ':' + sec + '       ' + date + '-' + month + '-' + year;
+    var time = (hour<10 ? '0':'')+ hour + ':' + (min<10 ? '0':'') + min  + "       " +
+     (date<10 ? '0':'')+ date + '-' +(month<10 ? '0':'')+ month + '-' + year;
     return time;
   }
 

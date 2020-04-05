@@ -1,28 +1,19 @@
 package com.javaweb.controller.admin;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import com.javaweb.dto.UserDTO;
+import com.javaweb.dto.BuildingDTO;
+import com.javaweb.service.IBuildingService;
 import com.javaweb.service.IUserService;
+import com.javaweb.utils.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.javaweb.dto.BuildingDTO;
-import com.javaweb.entity.BuildingEntity;
-import com.javaweb.repository.BuildingRepository;
-import com.javaweb.service.IBuildingService;
-import com.javaweb.utils.EnumUtils;
-
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class BuildingController {
@@ -45,12 +36,9 @@ public class BuildingController {
 
 		Map<String,String> districtsMap = EnumUtils.getDistricts();
 		Map<String,String> buildingTypesMap = EnumUtils.getBuildingTypes();
-
-		Map<Long,String> staffMap = userService.findAll();
-
+		List<Map<String,Object>> staffMap = userService.findAllActiveStaff();
 
 		modelView.addObject("staffMap",staffMap);
-		modelView.addObject("buildingRequest", buildingRequest);
 		modelView.addObject("districtsMap", districtsMap);
 		modelView.addObject("buildingTypesMap", buildingTypesMap);
 		return modelView;
