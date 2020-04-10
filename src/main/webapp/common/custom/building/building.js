@@ -3,7 +3,7 @@ const role = CONST_ROLE;
 var currentRequestForm = "";
 var ITEMS_ON_PAGE = 10;
 $(document).ready(function () {
-  
+
   const buildingToTableRowHTML = (building) => {
     return `<td class="center">
       <label class="pos-rel">
@@ -75,6 +75,7 @@ $(document).ready(function () {
       prevText: "Previous",
       nextText: "Next",
       onPageClick: function (pageNumber) {
+        $.LoadingOverlay("show");
         loadData(`${API_URL}/building/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`, callback);
       }
     });
@@ -98,7 +99,7 @@ $(document).ready(function () {
   const fetchData = async () => {
     $.LoadingOverlay("show");
     currentRequestForm = $('#building_form').serialize();
-    loadData(`${API_URL}/building/list?${currentRequestForm}`, () => {
+    loadData(`${API_URL}/building/list?${currentRequestForm}&page=1&size=${ITEMS_ON_PAGE}`, () => {
       fetchFirstPagination(`${API_URL}/building/count?${currentRequestForm}`, hideLoading);
     })
   }
@@ -212,13 +213,13 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
-                if (res = true) {
+                if (res == true) {
                   $.LoadingOverlay("hide");
                   $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
                   $.alert('Đã xóa thành công');
                 }
               })
-              .catch(e=>{
+              .catch(e => {
                 $.LoadingOverlay("hide");
                 $.alert('Thất bại');
               })
@@ -262,7 +263,7 @@ $(document).ready(function () {
                   $.alert('Đã xóa thành công');
                 }
               })
-              .catch(e=>{
+              .catch(e => {
                 $.LoadingOverlay("hide");
                 $.alert('Thất bại');
               })
@@ -311,7 +312,7 @@ $(document).ready(function () {
                 $.LoadingOverlay("hide");
                 $.alert('Thực hiện thành công');
               })
-              .catch(e=>{
+              .catch(e => {
                 $.LoadingOverlay("hide");
                 $.alert('Thất bại');
               })
@@ -371,12 +372,13 @@ $(document).ready(function () {
                     hideLoading();
                     $.alert('Thực hiện thành công');
                   })
-                  .catch(e=>{
-                    $.LoadingOverlay("hide");
-                    $.alert('Thất bại');
-                  })
+
                 }
 
+              })
+              .catch(e => {
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
               });
           },
         },

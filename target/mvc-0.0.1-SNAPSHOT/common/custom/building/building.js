@@ -98,7 +98,7 @@ $(document).ready(function () {
   const fetchData = async () => {
     $.LoadingOverlay("show");
     currentRequestForm = $('#building_form').serialize();
-    loadData(`${API_URL}/building/list?${currentRequestForm}`, () => {
+    loadData(`${API_URL}/building/list?${currentRequestForm}&page=1&size=${ITEMS_ON_PAGE}`, () => {
       fetchFirstPagination(`${API_URL}/building/count?${currentRequestForm}`, hideLoading);
     })
   }
@@ -371,12 +371,13 @@ $(document).ready(function () {
                     hideLoading();
                     $.alert('Thực hiện thành công');
                   })
-                  .catch(e=>{
-                    $.LoadingOverlay("hide");
-                    $.alert('Thất bại');
-                  })
+                  
                 }
 
+              })
+              .catch(e=>{
+                $.LoadingOverlay("hide");
+                $.alert('Thất bại');
               });
           },
         },
