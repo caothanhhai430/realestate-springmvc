@@ -4,6 +4,11 @@ var currentRequestForm = "";
 var ITEMS_ON_PAGE = 10;
 $(document).ready(function () {
 
+
+  function normalizeData(data) {
+    return data == null ? '' : data;
+  }
+
   const buildingToTableRowHTML = (building) => {
     return `<td class="center">
       <label class="pos-rel">
@@ -11,18 +16,18 @@ $(document).ready(function () {
             
         </label>
     </td>
-      <td>
-        <a href="#">${building.name}</a>
+    <td>
+    <a href="#">${normalizeData(building.name)}</a>
       </td>
-      <td>${building.address}</td>
-      <td>${building.managerName}</td>
-      <td>${building.managerPhone}</td>
-      <td>${building.buildingArea}</td>
-      <td>${building.rentCost}</td>
-      <td>${building.buildingTypeInString}</td>
-      <td>${building.rentArea}</td>
+      <td>${normalizeData(building.address)}</td>
+      <td>${normalizeData(building.managerName)}</td>
+      <td>${normalizeData(building.managerPhone)}</td>
+      <td>${normalizeData(building.buildingArea)}</td>
+      <td>${normalizeData(building.rentCost)}</td>
+      <td>${normalizeData(building.buildingTypeInString)}</td>
+      <td>${normalizeData(building.rentArea)}</td>
       <td>
-        <div class="hidden-sm hidden-xs action-buttons">
+            <div class="hidden-sm hidden-xs action-buttons">
 
           ${role.includes('ADMIN') ?
         `<button id='btn_assign_code${building.id}' data-toggle="modal"
@@ -84,6 +89,7 @@ $(document).ready(function () {
   const fetchFirstPagination = (url, callback) => {
     fetch(url).then(res => res.json()).then(count => {
       buildingPagination(count, ITEMS_ON_PAGE, 1, callback);
+      $('.table-header')[0].innerHTML = `Tìm thấy ${count} kết quả`;
       callback();
     })
       .catch(e => {
@@ -124,7 +130,7 @@ $(document).ready(function () {
       .then(res => res.json())
       .then(res => {
         res.map(e => {
-          data += '<tr> <td><input type="hidden" id="assignstaff_code' + e[0] + '"> <input type="checkbox"' + e[2] + ' ></td> <td>' + (e[1] == null ? '' : e[1]) + '</td> </tr>';
+          data += '<tr> <td><input type="hidden" id="assignstaff_code' + e[0] + '"> <input type="checkbox"' + e[2] + ' ></td> <td>' + (normalizeData(e[1])) + '</td> </tr>';
         })
         tbody.innerHTML = data;
         $.LoadingOverlay("hide");

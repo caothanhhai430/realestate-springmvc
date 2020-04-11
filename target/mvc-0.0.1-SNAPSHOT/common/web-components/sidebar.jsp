@@ -6,7 +6,7 @@
   </div>
   <div class="img bg-wrap text-center py-4" style="background-image: url(/common/template/sidebar/images/bg_1.jpg);">
     <div class="user-logo">
-      <div id="image-sidebar" class="img" style="background-image: url(/common/template/sidebar/images/logo.jpg);"></div>
+      <div id="image-sidebar" class="img" style="background-image: url(/common/template/sidebar/images/user.png);"></div>
       
       <h3 id="fullname-sidebar">
       </h3>

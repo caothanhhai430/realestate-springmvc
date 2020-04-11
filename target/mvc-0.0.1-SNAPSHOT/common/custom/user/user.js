@@ -65,6 +65,7 @@ $(document).ready(function () {
   const fetchFirstPagination = (url, callback) => {
     fetch(url).then(res => res.json()).then(count => {
       userPagination(count, ITEMS_ON_PAGE, 1, callback);
+      $('.table-header')[0].innerHTML = `Tìm thấy ${count} kết quả`;
       callback();
     })
       .catch(e => {
@@ -191,10 +192,12 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
-                if (res = true) {
+                if (res == true) {
                   $.LoadingOverlay("hide");
                   $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
                   $.alert('Đã xóa thành công');
+                }else{
+                  $.alert('Thao tác thất bại');
                 }
               })
               .catch(e=>{
@@ -236,9 +239,11 @@ $(document).ready(function () {
             }).then(res => res.json())
               .then(res => {
                 $.LoadingOverlay("hide");
-                if (res = true) {
+                if (res == true) {
                   $(this).closest("tr").remove();
                   $.alert('Đã xóa thành công');
+                }else{
+                  $.alert('Thao tác thất bại');
                 }
               })
               .catch(e=>{

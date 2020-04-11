@@ -18,7 +18,7 @@
 
                                 <div class="form-group avatar" style="display:inline-block;">
                                     <figure style="display:inline-block;">
-                                        <img id="image-preview" src="/common/template/sidebar/images/logo.jpg" alt="">
+                                        <img id="image-preview" src="/common/template/sidebar/images/user.png" alt="">
                                     </figure>
                                     <span style="display: inline-block;" class="pull-right">
                                         <input id="file-preview" type="file">

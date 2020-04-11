@@ -58,9 +58,7 @@ public class UserRepositoryCustomImpl  implements UserRepositoryCustom {
 		query.setFirstResult((pageable.getPageNumber()-1)*pageable.getPageSize());
 		query.setMaxResults(pageable.getPageSize());
 		List<UserEntity> results = (List<UserEntity>) query.getResultList();
-
 		return results;
-
 	}
 
 	@Override

@@ -1,10 +1,5 @@
 package com.configuration;
 
-import java.util.Properties;
-
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -16,6 +11,10 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories("com.javaweb.repository")
@@ -39,7 +38,7 @@ public class PersistenceJPAConfig {
 	 public DataSource dataSource(){
 	     DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	     dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-	     dataSource.setUrl("jdbc:mysql://localhost:3306/estatejdbc82019?useUnicode=true&connectionCollation=utf8_general_ci&characterSetResults=utf8");
+	     dataSource.setUrl("jdbc:mysql://localhost:3306/estate_springmvc82019?useUnicode=true&connectionCollation=utf8_general_ci&characterSetResults=utf8");
 	     dataSource.setUsername( "root" );
 	     dataSource.setPassword( "Messi3069" );
 	     return dataSource;

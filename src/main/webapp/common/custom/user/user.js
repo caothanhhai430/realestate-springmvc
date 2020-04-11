@@ -65,6 +65,7 @@ $(document).ready(function () {
   const fetchFirstPagination = (url, callback) => {
     fetch(url).then(res => res.json()).then(count => {
       userPagination(count, ITEMS_ON_PAGE, 1, callback);
+      $('.table-header')[0].innerHTML = `Tìm thấy ${count} kết quả`;
       callback();
     })
       .catch(e => {

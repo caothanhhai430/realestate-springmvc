@@ -7,6 +7,12 @@ var currentTourLoadMoreIndex = 1;
 
 $(document).ready(function () {
 
+
+
+  function normalizeData(data){
+    return data==null ? '' : data;
+  }
+
   const customerToTableRowHTML = (customer) => {
     return `<td class="center">
         <label class="pos-rel">
@@ -15,13 +21,13 @@ $(document).ready(function () {
         </label>
     </td>
     <td>
-        <a href="#">${customer.name}</a>
-    </td>
-    <td>${customer.phone}</td>
-    <td>${customer.email}</td>
-    <td>${customer.demand}</td>
-    <td>${customer.createdBy}</td>
-    <td>${timeConverter(customer.createdDate)}</td>
+    <a href="#">${normalizeData(customer.name)}</a>
+</td>
+<td>${normalizeData(customer.phone)}</td>
+<td>${normalizeData(customer.email)}</td>
+<td>${normalizeData(customer.demand)}</td>
+<td>${normalizeData(customer.createdBy)}</td>
+ <td>${timeConverter(customer.createdDate)}</td>
     <td>Đang xử lý</td>
     <td>
     <div class="hidden-sm hidden-xs action-buttons">
@@ -106,6 +112,7 @@ $(document).ready(function () {
       prevText: "Previous",
       nextText: "Next",
       onPageClick: function (pageNumber) {
+        $.LoadingOverlay("show");
         loadData(`${API_URL}/customer/list?${currentRequestForm}&page=${pageNumber}&size=${ITEMS_ON_PAGE}`, callback);
       }
     });
@@ -118,6 +125,7 @@ $(document).ready(function () {
   const fetchFirstPagination = (url, callback) => {
     fetch(url).then(res => res.json()).then(count => {
       customerPagination(count, ITEMS_ON_PAGE, 1, callback);
+      $('.table-header')[0].innerHTML = `Tìm thấy ${count} kết quả`;
       callback();
     })
       .catch(e => {
@@ -155,7 +163,7 @@ $(document).ready(function () {
       .then(res => res.json())
       .then(res => {
         res.map(e => {
-          data += '<tr> <td><input type="hidden" id="assignstaff_code' + e[0] + '"> <input type="checkbox"' + e[2] + ' ></td> <td>' + e[1] + '</td> </tr>';
+          data += '<tr> <td><input type="hidden" id="assignstaff_code' + e[0] + '"> <input type="checkbox"' + e[2] + ' ></td> <td>' + (normalizeData(e[1])) + '</td> </tr>';
         })
         tbody.innerHTML = data;
         $.LoadingOverlay("hide");
@@ -379,10 +387,12 @@ $(document).ready(function () {
               }
             }).then(res => res.json())
               .then(res => {
-                if (res = true) {
+                if (res == true) {
                   $.LoadingOverlay("hide");
                   $("#dynamic-table input[class^='checkbox-delete']:checked").closest('tr').remove();
                   $.alert('Đã xóa thành công');
+                }else{
+                  $.alert('Thao tác thất bại');
                 }
               })
               .catch(e=>{
@@ -423,9 +433,11 @@ $(document).ready(function () {
             }).then(res => res.json())
               .then(res => {
                 $.LoadingOverlay("hide");
-                if (res = true) {
+                if (res == true) {
                   $(this).closest("tr").remove();
                   $.alert('Đã xóa thành công');
+                }else{
+                  $.alert('Thao tác thất bại');
                 }
               })
               .catch(e=>{
