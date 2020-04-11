@@ -38,7 +38,7 @@ public class PersistenceJPAConfig {
 	 public DataSource dataSource(){
 	     DriverManagerDataSource dataSource = new DriverManagerDataSource();
 	     dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-	     dataSource.setUrl("jdbc:mysql://localhost:3306/estate_springmvc82019?useUnicode=true&connectionCollation=utf8_general_ci&characterSetResults=utf8");
+	     dataSource.setUrl("jdbc:mysql://localhost:3306/estate_caothanhhai_82019?useUnicode=true&connectionCollation=utf8_general_ci&characterSetResults=utf8");
 	     dataSource.setUsername( "root" );
 	     dataSource.setPassword( "Messi3069" );
 	     return dataSource;
