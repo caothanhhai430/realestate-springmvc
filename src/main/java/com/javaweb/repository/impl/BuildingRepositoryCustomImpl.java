@@ -56,6 +56,8 @@ public class BuildingRepositoryCustomImpl  implements BuildingRepositoryCustom{
 				.setDistrict(builder.getDistrict())
 				.setWard(builder.getWard())
 				.setStreet(builder.getStreet())
+				.setManagerName(builder.getManagerName())
+				.setManagerPhone(builder.getManagerPhone())
 				.build();
 		Map<String,Object> map = ObjectToMap.toMap(singleFieldBuilder);
 		String where = MapToSqlSearch.toSql(map,prefix);

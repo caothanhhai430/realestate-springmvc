@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Entity
 @Table(name="rentarea")
 public class RentAreaEntity extends AbstractEntity{
-	@Column(name="id")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
